@@ -1,9 +1,10 @@
-"use strict";
-
 (function () {
+
   'use strict';
 
-  angular.module('edhubJobsApp').directive('landingData', [LandingDataDirectiveClass]);
+  angular.module('rsCloudApp').directive('landingData', [
+      LandingDataDirectiveClass
+  ]);
 
   function LandingDataDirectiveClass() {
     return {

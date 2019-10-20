@@ -1,0 +1,19 @@
+
+notable jQuery plugins & fury elements:
+- carousel
+- progress bar
+- tabs
+- clients (grid & carousel)
+- gallery
+- video player (for customer CSV & Excel training)
+- testimonial carousels
+- accordion
+
+
+
+
+
+
+
+
+//

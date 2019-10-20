@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('edhubJobsApp').directive('landingData', [
+    angular.module('rsCloudApp').directive('landingData', [
         LandingDataDirectiveClass
     ]);
 

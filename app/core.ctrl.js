@@ -5,14 +5,14 @@
 (function () {
     'use strict';
 
-    angular.module('edhubJobsApp').controller('CoreCtrl', [
-        '$rootScope', '$scope', '$mdSidenav', '$mdDialog', '$timeout',
-        'edhubAuthService', '$location', CoreClass
+    angular.module('rsCloudApp').controller('CoreCtrl', [
+        '$rootScope', '$scope', '$mdSidenav', '$mdDialog',
+        '$timeout', '$location',
+        CoreClass
     ]);
 
     function CoreClass(
-        $rootScope, $scope, $mdSidenav, $mdDialog, $timeout,
-        edhubAuthService, $location
+        $rootScope, $scope, $mdSidenav, $mdDialog, $timeout, $location
     ) {
         $scope.ccCurrentUser = "";
         $scope.coreEdhubHorizontalState = true;
@@ -119,8 +119,9 @@
         });
 
         function _determineAuthState() {
-            var authUser = edhubAuthService.getAuthUser();
-            return authUser === "" ? enumAuthBox.loginSignup : enumAuthBox.logout;
+            // var authUser = edhubAuthService.getAuthUser();
+            let authUser = '';
+            return authUser === '' ? enumAuthBox.loginSignup : enumAuthBox.logout;
         }
 
         function _loginSignup() {

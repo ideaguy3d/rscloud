@@ -6,11 +6,11 @@
     'use strict';
 
     angular.module('rsCloudApp').controller('LandingCtrl', [
-       '$location', 'smoothScroll', '$rootScope', '$scope',
-        LandingClass
+        'edhubJobPostService', '$location', 'smoothScroll', '$rootScope',
+        'MockPetFoodSer', '$scope', LandingClass
     ]);
 
-    function LandingClass($location, smoothScroll, $rootScope, $scope) {
+    function LandingClass(edhubJobPostService, $location, smoothScroll, $rootScope, MockPetFoodSer, $scope) {
         const vm = this;
         let allPetsFood;
         let catFood;
@@ -140,10 +140,53 @@
 
         function activate() {
             console.log("__>> Wired up and ready to rock and roll.");
-            let allPetFood = [];
+            let allPetFood = MockPetFoodSer.allPetFood;
             $scope.s_petFood.push(allPetFood);
             console.log($scope.s_petFood);
             allPetsFood = $scope.s_petFood[1];
+
+            allPetFood.$loaded().then(function (response) {
+                let fieldTitle = $scope.s_petFood[0];
+                // add additional info to data for better categorizing
+                for (let i = 0; i < $scope.s_petFood[1].length; i++) {
+                    let rec = $scope.s_petFood[1][i];
+
+                    let info =[
+                        {
+                            category: 'is_current',
+                            value: rec[fieldTitle.catCurrent]
+                        }, {
+                            category: 'food_flavor',
+                            value: rec[fieldTitle.catFlavor]
+                        }, {
+                            subcat: 'gender',
+                            value: rec[fieldTitle.subGender]
+                        }, {
+                            subcat: 'has_died',
+                            value: rec[fieldTitle.subHasDied]
+                        }, {
+                            subcat: 'honorary',
+                            value: rec[fieldTitle.subHonorary]
+                        }
+                    ];
+
+                    let arInfo = [
+                        rec[fieldTitle.catCurrent], rec[fieldTitle.catFlavor], rec[fieldTitle.subGender],
+                        rec[fieldTitle.subHasDied], rec[fieldTitle.subHonorary]
+                    ];
+
+                    let strInfo = arInfo.join(' | ');
+
+                    info.forEach(function (elem) {
+                        $scope.s_petFood[1][i].push(elem);
+                        $scope.s_petFood[1][i].push(arInfo);
+                        $scope.s_petFood[1][i].push({strCat: strInfo});
+                    });
+
+                } // end of for-loop to add category objects to each record
+
+                let b = 'point';
+            })
         }
     }
 

@@ -1,17 +1,17 @@
 <!-- ctrl=LandingCtrl as landingCtrl -->
 <section id="edhub-landing-section">
-
+    
     <!-- START:  Hero Landing -->
     <section id="j-main-landing-hero" class="j-landing-hero j-overflow-hidden" layout="column"
              layout-align="center center" layout-padding>
         <div class="j-landing-hero-text">
-            <h1>Redstone Print & Mail</h1>
+            <h1>Entirely Pets</h1>
             <p style="font-weight: lighter">
-                <small>Cloud App</small>
+                <small>Avenger Themed Food</small>
             </p>
         </div>
     </section>
-
+    
     <!-- Search Result tool -->
     <md-toolbar id="edhub-recent-jobs-landing-title" class="md-padding j-text-center">
         <div layout="row" layout-padding layout-margin>
@@ -21,7 +21,7 @@
                 All Pets <ng-md-icon data-icon="favorite"></ng-md-icon>
             </md-button>
         </div>
-
+        
         <div layout="row" layout-padding layout-margin>
             <!-- Categories multi-select  -->
             <md-input-container>
@@ -41,7 +41,7 @@
                     </md-optgroup>
                 </md-select>
             </md-input-container>
-
+            
             <!-- Subcategories multi-select -->
             <md-input-container>
                 <label>Subcategories</label>
@@ -68,20 +68,20 @@
             </md-input-container>
         </div>
     </md-toolbar>
-
+    
     <p>selected categories = {{s_selectedCats}}, selected subcategories = {{s_selectedSubcats}}</p>
-
+    
     <div ng-switch="s_presentState">
         <div ng-switch-when="all">
             <h1 class="j-text-center">All pets <3 </h1>
             <landing-data></landing-data>
         </div>
-
+        
         <div ng-switch-when="cat">
             <h1 class="j-text-center">Avengers themed Cat food</h1>
             <landing-data></landing-data>
         </div>
-
+        
         <div ng-switch-when="dog">
             <h1 class="j-text-center">Avengers themed Dog food</h1>
             <landing-data></landing-data>
