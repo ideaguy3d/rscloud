@@ -1,91 +1,47 @@
-<!-- ctrl=LandingCtrl as landingCtrl -->
-<section id="edhub-landing-section">
+<!-- ctrl=LandingCtrl as cLanding -->
+<section id="rsm-landing-section">
 
     <!-- START:  Hero Landing -->
     <section id="j-main-landing-hero" class="j-landing-hero j-overflow-hidden" layout="column"
              layout-align="center center" layout-padding>
         <div class="j-landing-hero-text">
-            <h1>Redstone Print & Mail</h1>
-            <p style="font-weight: lighter">
-                <small>Cloud App</small>
+            <h1 class="rsm-hero-h1">Redstone Print & Mail</h1>
+            <p class="rsm-hero-p">
+                <ng-md-icon data-icon="cloud"></ng-md-icon>
+                Cloud App
             </p>
         </div>
+    
+        <form class="rsm-auth-form-landing" data-ng-submit="s_mockLogin()">
+            <h1 class="rsm-auth-h1">Authentication</h1>
+            <p style="color: darkred">{{cLanding.error}}</p>
+            <!-- organization name -->
+            <md-input-container class="md-icon-float md-block flex-gt-sm">
+                <label>Email</label>
+                <!--<md-icon md-svg-src="images/svg/business.svg"></md-icon>-->
+                <input type="email" name="organizationName" ng-model="cLanding.user.email" required>
+                <div ng-messages="cLanding.user.email.$error">
+                    <div ng-message="required">Email required.</div>
+                </div>
+            </md-input-container>
+    
+            <!-- name -->
+            <md-input-container class="md-icon-float md-block flex-gt-sm">
+                <label>Password</label>
+                <!--<md-icon md-svg-src="images/svg/pencil.svg"></md-icon>-->
+                <input name="repName" type="password" ng-model="cLanding.user.pass" required>
+                <div ng-messages="cLanding.user.pass.$error">
+                    <div ng-message="required">Password required.</div>
+                </div>
+            </md-input-container>
+    
+            <!-- buttons beneath fields -->
+            <div layout="row">
+                <md-button type="submit" class="md-raised rsm-btn-round">
+                    Login
+                </md-button>
+            </div>
+        </form>
     </section>
-
-    <!-- Search Result tool -->
-    <md-toolbar id="edhub-recent-jobs-landing-title" class="md-padding j-text-center">
-        <div layout="row" layout-padding layout-margin>
-            <md-button ng-click="s_changePresentState('dog')">Dogs</md-button>
-            <md-button ng-click="s_changePresentState('cat')">Cats</md-button>
-            <md-button ng-click="s_changePresentState('all')">
-                All Pets <ng-md-icon data-icon="favorite"></ng-md-icon>
-            </md-button>
-        </div>
-
-        <div layout="row" layout-padding layout-margin>
-            <!-- Categories multi-select  -->
-            <md-input-container>
-                <label>Categories</label>
-                <md-select data-ng-model="s_selectedCats" multiple>
-                    <md-optgroup label="Avenger Pet Food Flavor">
-                        <md-option data-ng-value="c.value"
-                                   ng-repeat="c in s_categories | filter: {category: 'food_flavor' }">
-                            {{c.value}}
-                        </md-option>
-                    </md-optgroup>
-                    <md-optgroup label="Avenger Is Current">
-                        <md-option data-ng-value="c.value"
-                                   ng-repeat="c in s_categories | filter: {category: 'is_current' }">
-                            {{c.value}}
-                        </md-option>
-                    </md-optgroup>
-                </md-select>
-            </md-input-container>
-
-            <!-- Subcategories multi-select -->
-            <md-input-container>
-                <label>Subcategories</label>
-                <md-select data-ng-model="s_selectedSubcats" multiple>
-                    <md-optgroup label="Avenger Gender">
-                        <md-option data-ng-value="sub.value"
-                                   ng-repeat="sub in s_subcats | filter: {subcat: 'gender' }">
-                            {{sub.value}}
-                        </md-option>
-                    </md-optgroup>
-                    <md-optgroup label="Avenger Has Died">
-                        <md-option data-ng-value="sub.value"
-                                   ng-repeat="sub in s_subcats | filter: {subcat: 'has_died' }">
-                            {{sub.value}}
-                        </md-option>
-                    </md-optgroup>
-                    <md-optgroup label="Honorary Avenger">
-                        <md-option data-ng-value="sub.value"
-                                   ng-repeat="sub in s_subcats | filter: {subcat: 'honorary' }">
-                            {{sub.value}}
-                        </md-option>
-                    </md-optgroup>
-                </md-select>
-            </md-input-container>
-        </div>
-    </md-toolbar>
-
-    <p>selected categories = {{s_selectedCats}}, selected subcategories = {{s_selectedSubcats}}</p>
-
-    <div ng-switch="s_presentState">
-        <div ng-switch-when="all">
-            <h1 class="j-text-center">All pets <3 </h1>
-            <landing-data></landing-data>
-        </div>
-
-        <div ng-switch-when="cat">
-            <h1 class="j-text-center">Avengers themed Cat food</h1>
-            <landing-data></landing-data>
-        </div>
-
-        <div ng-switch-when="dog">
-            <h1 class="j-text-center">Avengers themed Dog food</h1>
-            <landing-data></landing-data>
-        </div>
-    </div>
 
 </section>

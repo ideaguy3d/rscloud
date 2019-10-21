@@ -6,7 +6,7 @@ angular.module('rsCloudApp', [
             .when('/', {
                 templateUrl: 'states/landing/view.landing.html',
                 controller: 'LandingCtrl',
-                controllerAs: 'landingCtrl'
+                controllerAs: 'cLanding'
             })
             .when('/data', {
                 templateUrl: 'states/data/view.data.html',
@@ -171,7 +171,8 @@ angular.module('rsCloudApp', [
                     },
                     channelNameRsv: function ($route, ycChannelsSer) {
                         // we're not using $loaded() here... Hmmm. I wonder why.
-                        return '#' + ycChannelsSer.channels.$loaded().$getRecord($route.current.params.channelId).name;
+                        return '#' + ycChannelsSer.channels.$loaded()
+                            .$getRecord($route.current.params.channelId).name;
                     },
                     profileRsv: function ($location, ycAuthSer, ycUsersSer) {
                         return ycAuthSer.auth.$requireSignIn(
@@ -185,7 +186,8 @@ angular.module('rsCloudApp', [
                                         $location.url('/ycombinator/profile');
                                     }
                                 }).catch(function (error) {
-                                    console.log('__>> ERROR - unable to get the users profile info, error: ', error);
+                                    let info = '__>> ERROR - unable to get the users profile info: ';
+                                    console.log(info, error);
                                 });
                             },
                             // on error callback

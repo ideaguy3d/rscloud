@@ -3,15 +3,18 @@
  */
 
 (function () {
-    "use strict";
+    'use strict';
 
-    angular.module('edhubJobsApp').factory('edhubAuthService', [
-        '$firebaseAuth', '$rootScope', '$firebaseObject', '$location', '$q',
-        EdhubAuthClass
+    angular.module('rsCloudApp').factory('rsAuth', [
+        '$firebaseAuth', '$rootScope', '$firebaseObject',
+        '$location', '$q',
+        RedstoneAuthClass
     ]);
 
-    function EdhubAuthClass($firebaseAuth, $rootScope, $firebaseObject, $location, $q) {
-        $rootScope.rootEdhubAuthUser = "";
+    function RedstoneAuthClass(
+        $firebaseAuth, $rootScope, $firebaseObject, $location, $q
+    ) {
+        $rootScope.rsmAuthUser = '';
         const orgRef = firebase.database().ref('organizations');
         const auth = $firebaseAuth();
         let authApi = {};
@@ -19,20 +22,16 @@
 
         auth.$onAuthStateChanged(function (authUser) {
             if (authUser) {
-                var authUserRef = orgRef.child(authUser.uid);
-                $rootScope.rootEdhubAuthUser = $firebaseObject(authUserRef);
-                console.log("__>> The Auth User =");
-                console.log($rootScope.rootEdhubAuthUser);
+                let authUserRef = orgRef.child(authUser.uid);
+                $rootScope.rsmAuthUser = $firebaseObject(authUserRef);
                 $rootScope.$broadcast("edhub-event-auth-user", {
                     haveAuthUser: true
                 });
             } else {
-                $rootScope.rootEdhubAuthUser = "";
+                $rootScope.rsmAuthUser = "";
                 $rootScope.$broadcast("edhub-event-auth-user", {
                     haveAuthUser: false
                 });
-                console.log("There is no longer an Auth User");
-                console.log($rootScope.rootEdhubAuthUser);
             }
         });
 
@@ -63,7 +62,6 @@
             signup: function (user, info) {
                 // give 'info a default value if nothing got passed in
                 info = !!info ? info : {};
-                console.log("edhub - signup user = ", user);
                 auth.$createUserWithEmailAndPassword(user.email, user.password)
                     .then(function (regUser) {
                         orgRef.child(regUser.uid).set({
@@ -85,20 +83,20 @@
                     })
                     .catch(function (error) {
                         console.error("edhub - There was an error =");
-                        console.log(error.message);
+                        console.error(error.message);
                         $rootScope.rootAuthError = error.message;
                         return null;
                     });
             },
             getAuthUser: function () {
-                return $rootScope.rootEdhubAuthUser;
+                return $rootScope.rsmAuthUser;
             },
-            facebookSignin: function () {
+            facebookSignIn: function () {
                 firebase.auth().signInWithPopup(facebookProvider)
                     .then(function (res) {
                         let token = res.credential.accessToken;
                         let user = res.user;
-                        $scope.$apply(function(){
+                        $scope.$apply(function () {
                             $rootScope.rootEdhubAuthUser = user.email;
                         });
 
@@ -125,8 +123,8 @@
             }
         };
 
-        // return $firebaseAuth(), we are returning it in as an obj because one of the
-        // properties is doing a sort of recursive call
+        // return $firebaseAuth(), we are returning it in as an obj
+        // because .signup does a recursive call to .login
         return authApi;
     }
 }());
