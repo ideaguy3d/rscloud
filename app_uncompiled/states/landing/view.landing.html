@@ -1,0 +1,47 @@
+<!-- ctrl=LandingCtrl as cLanding -->
+<section id="rsm-landing-section">
+
+    <!-- START:  Hero Landing -->
+    <section id="j-main-landing-hero" class="j-landing-hero j-overflow-hidden" layout="row"
+             layout-xs="column" layout-align="center center" layout-padding>
+        <div class="j-landing-hero-text" flex="40">
+            <h1 class="rsm-m0">Redstone Print & Mail</h1>
+            <p class="rsm-hero-p">
+                <ng-md-icon data-icon="cloud"></ng-md-icon>
+                Cloud App
+            </p>
+        </div>
+    
+        <form class="rsm-auth-form-landing" data-ng-submit="s_mockLogin()">
+            <h1 class="rsm-auth-h1">Authentication</h1>
+            <p style="color: darkred">{{cLanding.error}}</p>
+            <!-- organization name -->
+            <md-input-container class="md-icon-float md-block flex-gt-sm">
+                <label>Email</label>
+                <!--<md-icon md-svg-src="images/svg/business.svg"></md-icon>-->
+                <input type="email" name="organizationName" ng-model="cLanding.user.email" required>
+                <div ng-messages="cLanding.user.email.$error">
+                    <div ng-message="required">Email required.</div>
+                </div>
+            </md-input-container>
+    
+            <!-- name -->
+            <md-input-container class="md-icon-float md-block flex-gt-sm">
+                <label>Password</label>
+                <!--<md-icon md-svg-src="images/svg/pencil.svg"></md-icon>-->
+                <input name="repName" type="password" ng-model="cLanding.user.pass" required>
+                <div ng-messages="cLanding.user.pass.$error">
+                    <div ng-message="required">Password required.</div>
+                </div>
+            </md-input-container>
+    
+            <!-- buttons beneath fields -->
+            <div layout="row">
+                <md-button type="submit" class="md-raised rsm-btn-round">
+                    Login
+                </md-button>
+            </div>
+        </form>
+    </section>
+
+</section>
