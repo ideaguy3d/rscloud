@@ -276,6 +276,7 @@ angular.module('rsCloudApp', [
             .otherwise('/');
 
         // Initialize Firebase
+        /*
         const config = {
             apiKey: "AIzaSyDEyWzMw0NPhKUnjWTNsYeqAWazk5cR_LI",
             authDomain: "edhub-jobs.firebaseapp.com",
@@ -286,5 +287,6 @@ angular.module('rsCloudApp', [
             appId: "1:743478741402:web:0923603feffd9137"
         };
         firebase.initializeApp(config);
+        */
     }
 ]);
