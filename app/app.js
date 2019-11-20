@@ -16,7 +16,21 @@ angular.module('rsCloudApp', [
             .when('/idea-engine', {
                 templateUrl: 'states/idea-engine/view.idea-engine.html',
                 controller: 'IdeaEngineCtrl',
-                controllerAs: 'cIdeaEngine'
+                controllerAs: 'cIdeaEngine',
+                resolve: {
+                    authRsv: function ($location, rsAuth) {
+                        console.log('__> 1');
+                        rsAuth.auth().$requireSignIn()
+                              .then(function (authUser) {
+                                  console.log('__> 2');
+                                  return authUser.email;
+                              })
+                              .catch(function (notAuthUser) {
+                                  console.log('__> 3');
+                                  $location.url('/');
+                              });
+                    }
+                }
             })
             .when('/chat', {
                 templateUrl: 'states/ycombinator/chat/view.yc-home.html',
@@ -26,15 +40,15 @@ angular.module('rsCloudApp', [
                     // the user does not have to be authenticated
                     requireNoAuth: function ($location, ycAuthSer) {
                         ycAuthSer.auth.$requireSignIn()
-                            .then(function (authUser) {
-                                // if the user is already logged in send them to the channels state
-                                $location.url('/');
-                            })
-                            .catch(function (error) {
-                                var errorMessage = '__>> ERROR - error while going to UI state home';
-                                console.log(errorMessage, error);
-                                return errorMessage;
-                            });
+                                 .then(function (authUser) {
+                                     // if the user is already logged in send them to the channels state
+                                     $location.url('/data');
+                                 })
+                                 .catch(function (error) {
+                                     var errorMessage = '__>> ERROR - error while going to UI state home';
+                                     console.log(errorMessage, error);
+                                     return errorMessage;
+                                 });
                     }
                 }
             })
@@ -62,15 +76,15 @@ angular.module('rsCloudApp', [
                     // the user does not have to be authenticated
                     requireNoAuth: function ($location, ycAuthSer) {
                         ycAuthSer.auth.$requireSignIn()
-                            .then(function (authUser) {
-                                // if the user is already logged in send them to the channels state
-                                $location.url('/ycombinator/channels');
-                            })
-                            .catch(function (error) {
-                                var errorMessage = '__>> ERROR - error while going to UI state home';
-                                console.log(errorMessage, error);
-                                return errorMessage;
-                            });
+                                 .then(function (authUser) {
+                                     // if the user is already logged in send them to the channels state
+                                     $location.url('/ycombinator/channels');
+                                 })
+                                 .catch(function (error) {
+                                     var errorMessage = '__>> ERROR - error while going to UI state home';
+                                     console.log(errorMessage, error);
+                                     return errorMessage;
+                                 });
                     }
                 }
             })
@@ -82,15 +96,15 @@ angular.module('rsCloudApp', [
                     // no authenticated user should go to login/signup view
                     requireNoAuthRsv: function (ycAuthSer, $location) {
                         return ycAuthSer.auth.$requireSignIn()
-                            .then(function (authUser) {
-                                console.log('__>> INFO - user is already logged in, authUser: ', authUser);
-                                $location.url('/ycombinator/channels');
-                            })
-                            // the user is not authenticated
-                            .catch(function (error) {
-                                console.log('__>> ERROR = ', error);
-                                return 'ERROR = ' + error;
-                            });
+                                        .then(function (authUser) {
+                                            console.log('__>> INFO - user is already logged in, authUser: ', authUser);
+                                            $location.url('/ycombinator/channels');
+                                        })
+                                        // the user is not authenticated
+                                        .catch(function (error) {
+                                            console.log('__>> ERROR = ', error);
+                                            return 'ERROR = ' + error;
+                                        });
                     }
                 }
             })
@@ -102,14 +116,14 @@ angular.module('rsCloudApp', [
                     // no authenticated user should go to login/signup view
                     requireNoAuthRslv: function (ycAuthSer, $location) {
                         return ycAuthSer.auth.$requireSignIn()
-                            .then(function (res) {
-                                console.log('__>> INFO - user is already logged in, authUser: ', authUser);
-                                $location.url('/ycombinator/channels');
-                            })
-                            .catch(function (error) {
-                                console.log('__>> ERROR = ', error);
-                                return 'ERROR = ' + error;
-                            });
+                                        .then(function (res) {
+                                            console.log('__>> INFO - user is already logged in, authUser: ', authUser);
+                                            $location.url('/ycombinator/channels');
+                                        })
+                                        .catch(function (error) {
+                                            console.log('__>> ERROR = ', error);
+                                            return 'ERROR = ' + error;
+                                        });
                     }
                 }
             })
@@ -140,29 +154,30 @@ angular.module('rsCloudApp', [
                 resolve: {
                     channelsRsv: function (ycChannelsSer) {
                         return ycChannelsSer.channels.$loaded()
-                            .catch(function (error) {
-                                console.log('__>> ERROR - There was an error fetching the channels, error: ' + error);
-                            });
+                                            .catch(function (error) {
+                                                console.log('__>> ERROR - There was an error fetching the channels, error: ' + error);
+                                            });
                     },
                     profileRsv: function ($location, ycAuthSer, ycUsersSer) {
                         return ycAuthSer.auth.$requireSignIn()
-                            .then(function (authUser) {
-                                return ycUsersSer.getProfile(authUser.uid).$loaded()
-                                    .then(function (profile) {
-                                        if (profile.displayName) {
-                                            return profile;
-                                        } else {
-                                            $location.url('/ycombinator/profile');
-                                        }
-                                    })
-                                    .catch(function (error) {
-                                        console.log('__>> ERROR - Unable to get the users profile, error: ', error);
-                                    });
-                            })
-                            .catch(function (error) {
-                                console.log('__>> ERROR - The user is not signed in, error: ', error);
-                                $location.url('/ycombinator/home');
-                            });
+                                        .then(function (authUser) {
+                                            return ycUsersSer.getProfile(authUser.uid).$loaded()
+                                                             .then(function (profile) {
+                                                                 if (profile.displayName) {
+                                                                     return profile;
+                                                                 }
+                                                                 else {
+                                                                     $location.url('/ycombinator/profile');
+                                                                 }
+                                                             })
+                                                             .catch(function (error) {
+                                                                 console.log('__>> ERROR - Unable to get the users profile, error: ', error);
+                                                             });
+                                        })
+                                        .catch(function (error) {
+                                            console.log('__>> ERROR - The user is not signed in, error: ', error);
+                                            $location.url('/ycombinator/home');
+                                        });
                     }
                 }
             })
@@ -177,7 +192,7 @@ angular.module('rsCloudApp', [
                     channelNameRsv: function ($route, ycChannelsSer) {
                         // we're not using $loaded() here... Hmmm. I wonder why.
                         return '#' + ycChannelsSer.channels.$loaded()
-                            .$getRecord($route.current.params.channelId).name;
+                                                  .$getRecord($route.current.params.channelId).name;
                     },
                     profileRsv: function ($location, ycAuthSer, ycUsersSer) {
                         return ycAuthSer.auth.$requireSignIn(
@@ -187,7 +202,8 @@ angular.module('rsCloudApp', [
                                     var displayName = profile.displayName;
                                     if (displayName) {
                                         return displayName;
-                                    } else {
+                                    }
+                                    else {
                                         $location.url('/ycombinator/profile');
                                     }
                                 }).catch(function (error) {
@@ -273,6 +289,14 @@ angular.module('rsCloudApp', [
                     orgJobAppsRslv: function ($route, edhubJobPostService) {
                         console.log('__>> JA - Will return .getOrganization()');
                         return edhubJobPostService.getOrganization($route.current.params.orgId).$loaded();
+                    }
+                }
+            })
+            .when('/logout', {
+                resolve: {
+                    logout: function (rsAuth, $location) {
+                        rsAuth.logout();
+                        $location.url('/login'); 
                     }
                 }
             })

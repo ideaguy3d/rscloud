@@ -21,13 +21,18 @@
 
         auth.$onAuthStateChanged(function (authUser) {
             if (authUser) {
+                console.log('IS authenticated - auth state changed', authUser);
+
                 let authUserRef = orgRef.child(authUser.uid);
+
                 $rootScope.rsmAuthUser = $firebaseObject(authUserRef);
                 $rootScope.$broadcast("edhub-event-auth-user", {
                     haveAuthUser: true
                 });
             }
             else {
+                console.log('NOT authenticated - auth state changed');
+
                 $rootScope.rsmAuthUser = "";
                 $rootScope.$broadcast("edhub-event-auth-user", {
                     haveAuthUser: false
@@ -61,8 +66,10 @@
             logout: function () {
                 return auth.$signOut();
             },
-            requireAuth: function () {
-                return auth.requireSignIn();
+            auth: function () {
+                console.log('__>> 4');
+                //return auth.$requireSignIn();
+                return auth;
             },
             signup: function (user, info) {
                 // give 'info a default value if nothing got passed in
