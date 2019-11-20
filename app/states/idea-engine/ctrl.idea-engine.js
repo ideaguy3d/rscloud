@@ -10,7 +10,8 @@
 
         const vm = this;
         vm.viewTitle = "Idea Engine Custom Training";
-        vm.userEmail = authRsv;
+        vm.userEmailRsv = authRsv.email;
+        vm.infoRsv = authRsv.info;
     }
 
 }());

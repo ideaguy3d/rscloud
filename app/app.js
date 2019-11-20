@@ -2,11 +2,31 @@ angular.module('rsCloudApp', [
     'firebase', 'angular-md5', 'ngRoute', 'ngMaterial', 'ngMdIcons', 'smoothScroll', 'ngAnimate'
 ]).config(['$routeProvider', '$locationProvider',
     function ($routeProvider) {
+        function authRsvCheck($location, rsAuth) {
+            rsAuth.auth().$requireSignIn()
+                  .then(function (authUser) {
+                      if(authUser.email === 'idea-engine@rs.app') {
+                          $location.url('/idea-engine');
+                      }
+                      else {
+                          $location.url('/data');
+                      }
+                  })
+                  .catch(function (nonAuth) {
+                      $location.url('/redstone');
+                  })
+        }
+
         $routeProvider
             .when('/', {
                 templateUrl: 'states/landing/view.landing.html',
                 controller: 'LandingCtrl',
-                controllerAs: 'cLanding'
+                controllerAs: 'cLanding',
+                resolve: {
+                    authRsv: function ($location, rsAuth) {
+                        authRsvCheck($location, rsAuth);
+                    }
+                }
             })
             .when('/redstone', {
                 templateUrl: 'states/redstone/view.redstone.html'
@@ -37,13 +57,16 @@ angular.module('rsCloudApp', [
                 controllerAs: 'cIdeaEngine',
                 resolve: {
                     authRsv: function ($location, rsAuth) {
-                        rsAuth.auth().$requireSignIn()
+                        return rsAuth.auth().$requireSignIn()
                               .then(function (authUser) {
                                   console.log(`authUser {authUser.email}:`);
                                   console.log(authUser.email);
                                   console.log(authUser);
                                   if(authUser.email === 'idea-engine@rs.app') {
-                                      return authUser.email;
+                                      return {
+                                          info: 'Hello ^_^/',
+                                          email: authUser.email
+                                      };
                                   }
                                   else{
                                       $location.url('/')
