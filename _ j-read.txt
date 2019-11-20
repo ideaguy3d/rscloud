@@ -4,7 +4,8 @@
 1) copy and paste code from "app" to "app_uncompiled" (to maintain human readable code)
 2) npm run babel
 3) grunt build
-4) delete all the compiled code from the app folder
+4) firebase deploy 
+delete all the compiled code from the app folder
 5) copy code from "app_uncompiled" back to "app" to continue development
 
 
