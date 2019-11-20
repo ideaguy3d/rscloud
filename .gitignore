@@ -9,3 +9,6 @@ dist
 .tmp
 .sass-cache
 *.xml
+app/bower_components
+bower_components
+**/bower_components
