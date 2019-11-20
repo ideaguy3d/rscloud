@@ -219,3 +219,7 @@ body {
     height: 100vh;
     overflow: hidden;
 }
+
+.rsm-anchor {
+    text-decoration: none;
+}
