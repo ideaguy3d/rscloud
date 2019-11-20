@@ -2,6 +2,7 @@ angular.module('rsCloudApp', [
     'firebase', 'angular-md5', 'ngRoute', 'ngMaterial', 'ngMdIcons', 'smoothScroll', 'ngAnimate'
 ]).config(['$routeProvider', '$locationProvider',
     function ($routeProvider) {
+
         function authRsvCheck($location, rsAuth) {
             rsAuth.auth().$requireSignIn()
                   .then(function (authUser) {
@@ -12,8 +13,9 @@ angular.module('rsCloudApp', [
                           $location.url('/data');
                       }
                   })
+                  // the user is unauthenticated
                   .catch(function (nonAuth) {
-                      $location.url('/redstone');
+                      $location.url('/');
                   })
         }
 
@@ -96,12 +98,12 @@ angular.module('rsCloudApp', [
                 }
             })
 
+
             /*********************************************
              * Other UI States to use as reference code *
              ********************************************/
 
-
-            // Y Combinator states - 8 states
+            // Y Combinator states - 8 states:
             .when('/chat', {
                 templateUrl: 'states/ycombinator/chat/view.yc-home.html',
                 controller: 'ycAuthCtrl',
@@ -280,7 +282,7 @@ angular.module('rsCloudApp', [
                 }
             })
 
-            // Edhub states -
+            // Edhub states - 9 states:
             .when('/edhub/landing', {
                 templateUrl: 'states/landing/view.map-landing.html',
                 controller: 'LandingCtrl',
