@@ -37,16 +37,15 @@
 
         authApi = {
             login: function (user, info) {
-                console.log('user: ', user);
                 auth.$signInWithEmailAndPassword(user.email, user.pass)
                     .then(function (authUser) {
                         if (!!info.path) {
                             // SUPER SPECIAL HARD CODED ui-states:
                             if (authUser.email === 'idea-engine@rs.app') {
-                                $location.path('/' + '')
+                                $location.path('/' + info.path);
                             }
                             else {
-                                $location.path('/' + info.path);
+                                $location.path('/cart');
                             }
                         }
                         else {
@@ -55,7 +54,7 @@
                     })
                     .catch(function (error) {
                         console.error("redstone - There was an error =");
-                        console.log(error.message);
+                        console.error(error.message);
                         $rootScope.rootAuthError = error.message;
                     });
             },

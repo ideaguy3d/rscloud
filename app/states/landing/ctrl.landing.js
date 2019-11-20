@@ -22,12 +22,11 @@
             if(
                 vm.user.email.includes(rsAuth.ccRed()) === (rsAuth.ccRed() === $rootScope.ccRed)
             ) {
-                rsAuth.login(vm.user, {email: vm.user.email, path: user.email.split('@')[0]});
+                rsAuth.login(vm.user, {email: vm.user.email, path: vm.user.email.split('@')[0]});
             }
             else {
                 rsAuth.login(vm.user, {email: vm.user.email, path: null});
             }
-
         };
 
         $scope.s_mockLogin = function () {

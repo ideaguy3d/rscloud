@@ -14,7 +14,9 @@ angular.module('rsCloudApp', [
                 controllerAs: 'landingCtrl'
             })
             .when('/idea-engine', {
-                templateUrl: 'states/idea-engine/view.idea-engine.html'
+                templateUrl: 'states/idea-engine/view.idea-engine.html',
+                controller: 'IdeaEngineCtrl',
+                controllerAs: 'cIdeaEngine'
             })
             .when('/chat', {
                 templateUrl: 'states/ycombinator/chat/view.yc-home.html',
