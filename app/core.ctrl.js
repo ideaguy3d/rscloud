@@ -33,7 +33,7 @@
         };
 
         function coreEdhubToggleSideNav(componentId) {
-            console.log("edhub - coreEdhubToggleSideNav() invoked");
+            console.log("redstone cloud app - coreEdhubToggleSideNav() invoked");
             return function () {
                 $mdSidenav(componentId).toggle();
             }

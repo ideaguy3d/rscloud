@@ -23,7 +23,7 @@ angular.module('rsCloudApp', [
                         ycAuthSer.auth.$requireSignIn()
                             .then(function (authUser) {
                                 // if the user is already logged in send them to the channels state
-                                $location.url('/ycombinator/channels');
+                                $location.url('/');
                             })
                             .catch(function (error) {
                                 var errorMessage = '__>> ERROR - error while going to UI state home';
@@ -275,18 +275,18 @@ angular.module('rsCloudApp', [
             // go to base url
             .otherwise('/');
 
-        // Initialize Firebase
-        /*
-        const config = {
-            apiKey: "AIzaSyDEyWzMw0NPhKUnjWTNsYeqAWazk5cR_LI",
-            authDomain: "edhub-jobs.firebaseapp.com",
-            databaseURL: "https://edhub-jobs.firebaseio.com",
-            projectId: "edhub-jobs",
-            storageBucket: "edhub-jobs.appspot.com",
-            messagingSenderId: "743478741402",
-            appId: "1:743478741402:web:0923603feffd9137"
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBiWzqiziBRqAkJzshxK2bALZbsxCsvO8M",
+            authDomain: "redstone-auto.firebaseapp.com",
+            databaseURL: "https://redstone-auto.firebaseio.com",
+            projectId: "redstone-auto",
+            storageBucket: "redstone-auto.appspot.com",
+            messagingSenderId: "792273302054",
+            appId: "1:792273302054:web:f97b23a3d4ed3987906ce7",
+            measurementId: "G-XZR8MYEW2R"
         };
-        firebase.initializeApp(config);
-        */
+        // Init Firebase
+        firebase.initializeApp(firebaseConfig);
     }
 ]);

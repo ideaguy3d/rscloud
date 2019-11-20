@@ -2,19 +2,19 @@ body {
     padding: 0;
 }
 
-.edhub-margin-auto {
+.rsm-margin-auto {
     margin: auto !important;
 }
 
-.edhub-vh100 {
+.rsm-vh100 {
     height: 100vh;
 }
 
-.edhub-vh70 {
+.rsm-vh70 {
     height: 70vh;
 }
 
-.edhub-view-mtop {
+.rsm-view-mtop {
     margin: 100px;
 }
 
@@ -34,7 +34,7 @@ body {
 }
 
 @media screen and (max-width: 600px) {
-    #edhub-signup-form {
+    #rsm-signup-form {
         width: 390px;
     }
 }
@@ -53,20 +53,20 @@ md-grid-tile a {
     text-decoration: none;
 }
 
-.edhub-applicant-linkedin-link a:active {
+.rsm-applicant-linkedin-link a:active {
     text-decoration: none;
 }
 
-.edhub-applicant-linkedin-link a:visited {
+.rsm-applicant-linkedin-link a:visited {
     text-decoration: none;
 }
 
-.edhub-auth-error {
+.rsm-auth-error {
     color: indianred;
 }
 
 /**
-    -- edhub anim prac --
+    -- rsm anim prac --
 **/
 
 .div-inline {
@@ -105,12 +105,12 @@ md-grid-tile a {
     left: 320px;
 }
 
-#edhub-core-nav-menu-btn {
+#rsm-core-nav-menu-btn {
     position: fixed;
 }
 
 /********************************
--- end of edhub initial ui code --
+-- end of rsm initial ui code --
 **********************************/
 
 
@@ -124,11 +124,11 @@ md-input-container.md-icon-float > ng-md-icon {
     overflow: hidden;
 }
 
-.edhub-w33 {
+.rsm-w33 {
     width: 33%;
 }
 
-.edhub-general-error {
+.rsm-general-error {
     margin-top: 0;
     color: indianred;
     border: 1px solid indianred;
@@ -647,11 +647,11 @@ md-bottom-sheet md-list-item.j-inline {
     display: inline-block;
 }
 
-.edhub-no-pad {
+.rsm-no-pad {
     padding: 0 !important;
 }
 
-.edhub-no-mar {
+.rsm-no-mar {
     margin: 0 !important;
 }
 
@@ -662,18 +662,18 @@ md-bottom-sheet md-list-item.j-inline {
 /**
 AuthBox style rules
 **/
-#edhub-auth-info-container {
+#rsm-auth-info-container {
     position: fixed;
     z-index: 99;
     right: 0;
     /*top: 20px;*/
 }
 
-.edhub-auth-box-username {
+.rsm-auth-box-username {
     margin: 0;
 }
 
-#edhub-auth-box-avatar {
+#rsm-auth-box-avatar {
     width: 36px;
     height: 36px;
 }
@@ -746,15 +746,15 @@ AuthBox style rules
     }
 }
 
-.edhub-main-app-view-container {
+.rsm-main-app-view-container {
     min-height: 70%;
 }
 
-.edhub-channel-list-item-btn {
+.rsm-channel-list-item-btn {
     text-align: left !important;
 }
 
-.edhub-form1 {
+.rsm-form1 {
     padding: 12px;
     margin: 12px;
     border: 1px solid rgba(0,0,0,0.5);
@@ -762,7 +762,7 @@ AuthBox style rules
     transition: all linear 0.125s;
 }
 
-.edhub-form1.ng-hide {
+.rsm-form1.ng-hide {
     opacity: 0;
     transform: scale(0.8);
 }

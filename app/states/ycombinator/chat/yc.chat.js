@@ -6,14 +6,15 @@
     'use strict';
     var yc = '/ycombinator/';
 
-    //-- SERVICES --\\
+    /******** SERVICES ********/
+
     // ycAuthSer
     function SerAuthClass($firebaseAuth) {
         var auth = $firebaseAuth();
 
-        return {
-            auth: auth
-        }
+        console.log('rscloud Auth Service invoked');
+
+        return {auth: auth}
     }
 
     // ycUsersSer
@@ -90,7 +91,9 @@
         };
     }
 
-    //-- CONTROLLERS --\\
+
+    /******** CONTROLLERS ********/
+
     // ycAuthCtrl
     function CtrlAuthClass(ycAuthSer, $location) {
         var authCtrl = this;
@@ -103,29 +106,28 @@
 
         authCtrl.login = function () {
             ycAuthSer.auth.$signInWithEmailAndPassword(authCtrl.user.email, authCtrl.user.password)
-                .then(function (authRes) {
-                    $location.url('/ycombinator/channels');
-                })
-                .catch(function (error) {
-                    console.log("__>> ERROR:");
-                    console.log(error);
-                    authCtrl.error = error;
-                });
+                     .then(function (authRes) {
+                         $location.url('/ycombinator/channels');
+                     })
+                     .catch(function (error) {
+                         console.log("__>> ERROR:");
+                         console.log(error);
+                         authCtrl.error = error;
+                     });
         };
 
         authCtrl.register = function () {
             console.log('__>> should invoke YC auth service');
-            ycAuthSer.auth.$createUserWithEmailAndPassword(
-                authCtrl.user.email, authCtrl.user.password
-            ).then(function (userRes) {
-                $location.url('/');
-                console.log('__>> should sign user up with this info');
-                console.log(userRes);
-            })
-                .catch(function (error) {
-                    authCtrl.error = error;
-                    console.log('__>> ERROR: ' + error);
-                });
+            ycAuthSer.auth.$createUserWithEmailAndPassword(authCtrl.user.email, authCtrl.user.password)
+                     .then(function (userRes) {
+                         $location.url('/');
+                         console.log('__>> should sign user up with this info');
+                         console.log(userRes);
+                     })
+                     .catch(function (error) {
+                         authCtrl.error = error;
+                         console.log('__>> ERROR: ' + error);
+                     });
         }
     } // END OF: CtrlAuthClass
 
@@ -151,8 +153,7 @@
 
     // ycChannelsCtrl
     function CtrlChannelsClass(
-        $location, ycAuthSer, ycUsersSer, profileRsv, channelsRsv, ycMessagesSer,
-        ycChannelsSer
+        $location, ycAuthSer, ycUsersSer, profileRsv, channelsRsv, ycMessagesSer, ycChannelsSer
     ) {
         const channelsCtrl = this;
         channelsCtrl.messages = null;
@@ -193,15 +194,16 @@
                 ycMessagesSer.forChannel(entityId).$loaded().then(function (messages) {
                     channelsCtrl.messages = messages;
                 })
-            } else if (messagesFor === 'forUsers') {
+            }
+            else if (messagesFor === 'forUsers') {
                 // get the other users display name
                 channelsCtrl.channelName = ycUsersSer.getDisplayName(entityId);
 
                 // the parameter order I'm passing in could be wrong ???
                 ycMessagesSer.forUsers(entityId, channelsCtrl.profile.$id).$loaded()
-                    .then(function (messages) {
-                        channelsCtrl.messages = messages;
-                    });
+                             .then(function (messages) {
+                                 channelsCtrl.messages = messages;
+                             });
             }
         };
 
@@ -221,15 +223,15 @@
 
         channelsCtrl.createChannel = function () {
             channelsCtrl.channels.$add(channelsCtrl.newChannel)
-                .then(function (ref) {
-                    channelsCtrl.newChannel = {
-                        name: ''
-                    };
-                    channelsCtrl.getMessagesFor(ref.key, 'forChannel');
-                })
-                .catch(function (error) {
-                    console.log('__>> ERROR - unable to add a channel, error: ', error);
-                });
+                        .then(function (ref) {
+                            channelsCtrl.newChannel = {
+                                name: ''
+                            };
+                            channelsCtrl.getMessagesFor(ref.key, 'forChannel');
+                        })
+                        .catch(function (error) {
+                            console.log('__>> ERROR - unable to add a channel, error: ', error);
+                        });
         };
 
         channelsCtrl.logout = function () {
@@ -267,34 +269,33 @@
         }
     }
 
-    angular.module('edhubJobsApp')
-        // SERVICES
-        .factory('ycAuthSer', [
-            '$firebaseAuth', SerAuthClass
-        ])
-        .factory('ycUsersSer', [
-            '$firebaseArray', '$firebaseObject', SerUsersClass
-        ])
-        .factory('ycChannelsSer', [
-            '$firebaseArray', SerChannelsClass
-        ])
-        .factory('ycMessagesSer', [
-            '$firebaseArray', SerMessagesClass
-        ])
-        // CONTROLLERS
-        .controller('ycAuthCtrl', [
-            'ycAuthSer', '$location', CtrlAuthClass
-        ])
-        .controller('ycProfileCtrl', [
-            '$location', 'md5', 'authRsv', 'profileRsv', '$timeout',
-            CtrlProfileClass
-        ])
-        .controller('ycChannelsCtrl', [
-            '$location', 'ycAuthSer', 'ycUsersSer', 'profileRsv', 'channelsRsv',
-            'ycMessagesSer', 'ycChannelsSer', CtrlChannelsClass
-        ])
-        .controller('ycMessagesCtrl', [
-            'messagesRsv', 'channelNameRsv', 'profileRsv', CtrlMessagesClass
-        ])
+    angular.module('rsCloudApp')
+           // SERVICES
+           .factory('ycAuthSer', [
+               '$firebaseAuth', SerAuthClass
+           ])
+           .factory('ycUsersSer', [
+               '$firebaseArray', '$firebaseObject', SerUsersClass
+           ])
+           .factory('ycChannelsSer', [
+               '$firebaseArray', SerChannelsClass
+           ])
+           .factory('ycMessagesSer', [
+               '$firebaseArray', SerMessagesClass
+           ])
+           // CONTROLLERS
+           .controller('ycAuthCtrl', [
+               'ycAuthSer', '$location', CtrlAuthClass
+           ])
+           .controller('ycProfileCtrl', [
+               '$location', 'md5', 'authRsv', 'profileRsv', '$timeout', CtrlProfileClass
+           ])
+           .controller('ycChannelsCtrl', [
+               '$location', 'ycAuthSer', 'ycUsersSer', 'profileRsv', 'channelsRsv',
+               'ycMessagesSer', 'ycChannelsSer', CtrlChannelsClass
+           ])
+           .controller('ycMessagesCtrl', [
+               'messagesRsv', 'channelNameRsv', 'profileRsv', CtrlMessagesClass
+           ])
     ;
 }());
