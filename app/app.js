@@ -8,23 +8,26 @@ angular.module('rsCloudApp', [
                 controller: 'LandingCtrl',
                 controllerAs: 'cLanding'
             })
+            .when('/redstone', {
+                templateUrl: 'states/redstone/view.redstone.html'
+            })
             .when('/cost-automation', {
-                templateUrl: '',
+                templateUrl: 'states/cost-auto/view.cost-auto.html',
                 controller: '',
                 controllerAs: ''
             })
             .when('/lightning-preprocessor', {
-                templateUrl: '',
+                templateUrl: 'states/preprocessor/view.lightning.html',
                 controller: '',
                 controllerAs: ''
             })
             .when('/customer-training', {
-                templateUrl: '',
+                templateUrl: 'states/training/view.customer.html',
                 controller: '',
                 controllerAs: ''
             })
             .when('/apps', {
-                templateUrl: '',
+                templateUrl: 'states/apps/view.apps.html',
                 controller: '',
                 controllerAs: ''
             })
@@ -42,10 +45,13 @@ angular.module('rsCloudApp', [
                                   if(authUser.email === 'idea-engine@rs.app') {
                                       return authUser.email;
                                   }
+                                  else{
+                                      $location.url('/')
+                                  }
 
                               })
                               .catch(function (notAuthUser) {
-                                  $location.url('/');
+                                  $location.url('/redstone');
                               });
                     }
                 }
