@@ -33,7 +33,8 @@
         };
 
         function coreEdhubToggleSideNav(componentId) {
-            console.log("redstone cloud app - coreEdhubToggleSideNav() invoked");
+            $rootScope.ccRed = '@rs.app';
+            console.log("redstone cloud app - coreRedstoneToggleSideNav() wired up");
             return function () {
                 $mdSidenav(componentId).toggle();
             }
