@@ -3,24 +3,24 @@
 <head>
     <meta charset="utf-8">
     <title>Redstone Cloud App</title>
-    
+
     <meta http-equiv="x-ua-compatible" content="IE=edge">
     <meta name="description" content="Redstone Automation">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="author" content="github.com/ideaguy3d">
-    
+
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
-    <link rel="stylesheet" href="bower_components/angular-material-icons/angular-material-icons.css" />
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
+    <link rel="stylesheet" href="bower_components/angular-material-icons/angular-material-icons.css"/>
     <!-- endbower -->
     <!-- endbuild -->
-    
+
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/redstone.css">
     <link rel="stylesheet" href="styles/style.css">
     <!-- endbuild -->
-    
+
     <!-- ng-cloak -->
     <style type="text/css">
         [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -33,8 +33,8 @@
 
 <!--[if lt IE 7]>
 <p class="browsehappy">
-    You are using an <strong>outdated</strong> browser. Please
-    <a href="http://browsehappy.com/">upgrade your browser</a>
+    You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your
+    browser</a>
     to improve your experience.
 </p>
 <![endif]-->
@@ -44,7 +44,7 @@
 <!-------------------------------->
 <div ng-include="'layout/navbar/in.main-nav.html'"></div>
 
-<div ng-cloak layout="row" class="edhub-main-app-view-container">
+<div ng-cloak layout="row" class="rsm-main-app-view-container">
     <!--------------------------------------->
     <!----------- app entry point ----------->
     <!--------------------------------------->
@@ -98,10 +98,11 @@
 <!-- controllers -->
 <script src="core.ctrl.js"></script>
 <script src="states/landing/ctrl.landing.js"></script>
+<script src="states/idea-engine/ctrl.idea-engine.js"></script>
 <!-- directives -->
 <script src="directives/dir.landing-data.js"></script>
 <!-- yc chat / messaging system prototype code -->
-<!--<script src="states/ycombinator/chat/yc.chat.js"></script>-->
+<script src="states/ycombinator/chat/yc.chat.js"></script>
 <!-- endbuild -->
 
 

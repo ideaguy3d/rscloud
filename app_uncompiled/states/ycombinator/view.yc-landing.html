@@ -1,8 +1,8 @@
 <!-- ctrl=LandingCtrl as landingCtrl -->
-<section id="edhub-landing-section">
+<section id="rsm-landing-section">
     <!-- "Recent Jobs" Title -->
-    <md-toolbar id="edhub-recent-jobs-landing-title" class="md-padding md-warn edhub-text-center">
-        <h2>{{landingCtrl.ycombinatorMessage}}</h2>
+    <md-toolbar id="rsm-recent-jobs-landing-title" class="md-padding md-warn rsm-text-center">
+        <h2>Redstone Message: {{landingCtrl.ycombinatorMessage}}</h2>
     </md-toolbar>
 
     <!-- START: Recent Job Posts LOOP -->
@@ -12,7 +12,7 @@
 
         <!-- LOOP START - data card landingCtrl.jobPostings -->
         <md-grid-tile ng-repeat="post in landingCtrl.orgFeed | orderBy : 'timestamp' : true">
-            <md-card class="{{'edhub-landing-job'+$index}}">
+            <md-card class="{{'rsm-landing-job'+$index}}">
                 <!-- image -->
                 <img ng-src="images/edhub-bg-2x.png" class="md-card-image" alt="Washed Out">
                 <!-- header -->

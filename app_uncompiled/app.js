@@ -2,17 +2,108 @@ angular.module('rsCloudApp', [
     'firebase', 'angular-md5', 'ngRoute', 'ngMaterial', 'ngMdIcons', 'smoothScroll', 'ngAnimate'
 ]).config(['$routeProvider', '$locationProvider',
     function ($routeProvider) {
+
+        function authRsvCheck($location, rsAuth) {
+            rsAuth.auth().$requireSignIn()
+                  .then(function (authUser) {
+                      if(authUser.email === 'idea-engine@rs.app') {
+                          $location.url('/idea-engine');
+                      }
+                      else {
+                          $location.url('/data');
+                      }
+                  })
+                  // the user is unauthenticated
+                  .catch(function (nonAuth) {
+                      $location.url('/');
+                  })
+        }
+
         $routeProvider
             .when('/', {
                 templateUrl: 'states/landing/view.landing.html',
                 controller: 'LandingCtrl',
-                controllerAs: 'cLanding'
+                controllerAs: 'cLanding',
+                resolve: {
+                    authRsv: function ($location, rsAuth) {
+                        authRsvCheck($location, rsAuth);
+                    }
+                }
+            })
+            .when('/redstone', {
+                templateUrl: 'states/redstone/view.redstone.html'
+            })
+            .when('/cost-automation', {
+                templateUrl: 'states/cost-auto/view.cost-auto.html',
+                controller: '',
+                controllerAs: ''
+            })
+            .when('/lightning-preprocessor', {
+                templateUrl: 'states/preprocessor/view.lightning.html',
+                controller: '',
+                controllerAs: ''
+            })
+            .when('/customer-training', {
+                templateUrl: 'states/training/view.customer.html',
+                controller: '',
+                controllerAs: ''
+            })
+            .when('/apps', {
+                templateUrl: 'states/apps/view.apps.html',
+                controller: '',
+                controllerAs: ''
+            })
+            .when('/idea-engine', {
+                templateUrl: 'states/idea-engine/view.idea-engine.html',
+                controller: 'IdeaEngineCtrl',
+                controllerAs: 'cIdeaEngine',
+                resolve: {
+                    authRsv: function ($location, rsAuth) {
+                        return rsAuth.auth().$requireSignIn()
+                              .then(function (authUser) {
+                                  console.log(`authUser {authUser.email}:`);
+                                  console.log(authUser.email);
+                                  console.log(authUser);
+                                  if(authUser.email === 'idea-engine@rs.app') {
+                                      return {
+                                          info: 'Hello ^_^/',
+                                          email: authUser.email
+                                      };
+                                  }
+                                  else{
+                                      $location.url('/')
+                                  }
+
+                              })
+                              .catch(function (notAuthUser) {
+                                  $location.url('/redstone');
+                              });
+                    }
+                }
             })
             .when('/data', {
                 templateUrl: 'states/data/view.data.html',
                 controller: 'LandingCtrl',
                 controllerAs: 'landingCtrl'
             })
+            .when('/cart', {
+                templateUrl: 'states/cart/view.cart.html'
+            })
+            .when('/logout', {
+                resolve: {
+                    logout: function (rsAuth, $location) {
+                        rsAuth.logout();
+                        $location.url('/');
+                    }
+                }
+            })
+
+
+            /*********************************************
+             * Other UI States to use as reference code *
+             ********************************************/
+
+            // Y Combinator states - 8 states:
             .when('/chat', {
                 templateUrl: 'states/ycombinator/chat/view.yc-home.html',
                 controller: 'ycAuthCtrl',
@@ -21,29 +112,18 @@ angular.module('rsCloudApp', [
                     // the user does not have to be authenticated
                     requireNoAuth: function ($location, ycAuthSer) {
                         ycAuthSer.auth.$requireSignIn()
-                            .then(function (authUser) {
-                                // if the user is already logged in send them to the channels state
-                                $location.url('/ycombinator/channels');
-                            })
-                            .catch(function (error) {
-                                var errorMessage = '__>> ERROR - error while going to UI state home';
-                                console.log(errorMessage, error);
-                                return errorMessage;
-                            });
+                                 .then(function (authUser) {
+                                     // if the user is already logged in send them to the channels state
+                                     $location.url('/data');
+                                 })
+                                 .catch(function (error) {
+                                     var errorMessage = '__>> ERROR - error while going to UI state home';
+                                     console.log(errorMessage, error);
+                                     return errorMessage;
+                                 });
                     }
                 }
             })
-            .when('/cart', {
-                templateUrl: 'states/cart/view.cart.html'
-            })
-
-
-            /*********************************************
-             * Other UI States to use as reference code *
-             ********************************************/
-
-
-            // Y Combinator states - 8 states
             .when('/ycombinator/positions', {
                 templateUrl: 'states/ycombinator/view.yc-landing.html',
                 controller: 'YCombinatorLandingCtrl',
@@ -57,15 +137,15 @@ angular.module('rsCloudApp', [
                     // the user does not have to be authenticated
                     requireNoAuth: function ($location, ycAuthSer) {
                         ycAuthSer.auth.$requireSignIn()
-                            .then(function (authUser) {
-                                // if the user is already logged in send them to the channels state
-                                $location.url('/ycombinator/channels');
-                            })
-                            .catch(function (error) {
-                                var errorMessage = '__>> ERROR - error while going to UI state home';
-                                console.log(errorMessage, error);
-                                return errorMessage;
-                            });
+                                 .then(function (authUser) {
+                                     // if the user is already logged in send them to the channels state
+                                     $location.url('/ycombinator/channels');
+                                 })
+                                 .catch(function (error) {
+                                     var errorMessage = '__>> ERROR - error while going to UI state home';
+                                     console.log(errorMessage, error);
+                                     return errorMessage;
+                                 });
                     }
                 }
             })
@@ -77,15 +157,15 @@ angular.module('rsCloudApp', [
                     // no authenticated user should go to login/signup view
                     requireNoAuthRsv: function (ycAuthSer, $location) {
                         return ycAuthSer.auth.$requireSignIn()
-                            .then(function (authUser) {
-                                console.log('__>> INFO - user is already logged in, authUser: ', authUser);
-                                $location.url('/ycombinator/channels');
-                            })
-                            // the user is not authenticated
-                            .catch(function (error) {
-                                console.log('__>> ERROR = ', error);
-                                return 'ERROR = ' + error;
-                            });
+                                        .then(function (authUser) {
+                                            console.log('__>> INFO - user is already logged in, authUser: ', authUser);
+                                            $location.url('/ycombinator/channels');
+                                        })
+                                        // the user is not authenticated
+                                        .catch(function (error) {
+                                            console.log('__>> ERROR = ', error);
+                                            return 'ERROR = ' + error;
+                                        });
                     }
                 }
             })
@@ -97,14 +177,14 @@ angular.module('rsCloudApp', [
                     // no authenticated user should go to login/signup view
                     requireNoAuthRslv: function (ycAuthSer, $location) {
                         return ycAuthSer.auth.$requireSignIn()
-                            .then(function (res) {
-                                console.log('__>> INFO - user is already logged in, authUser: ', authUser);
-                                $location.url('/ycombinator/channels');
-                            })
-                            .catch(function (error) {
-                                console.log('__>> ERROR = ', error);
-                                return 'ERROR = ' + error;
-                            });
+                                        .then(function (res) {
+                                            console.log('__>> INFO - user is already logged in, authUser: ', authUser);
+                                            $location.url('/ycombinator/channels');
+                                        })
+                                        .catch(function (error) {
+                                            console.log('__>> ERROR = ', error);
+                                            return 'ERROR = ' + error;
+                                        });
                     }
                 }
             })
@@ -135,29 +215,30 @@ angular.module('rsCloudApp', [
                 resolve: {
                     channelsRsv: function (ycChannelsSer) {
                         return ycChannelsSer.channels.$loaded()
-                            .catch(function (error) {
-                                console.log('__>> ERROR - There was an error fetching the channels, error: ' + error);
-                            });
+                                            .catch(function (error) {
+                                                console.log('__>> ERROR - There was an error fetching the channels, error: ' + error);
+                                            });
                     },
                     profileRsv: function ($location, ycAuthSer, ycUsersSer) {
                         return ycAuthSer.auth.$requireSignIn()
-                            .then(function (authUser) {
-                                return ycUsersSer.getProfile(authUser.uid).$loaded()
-                                    .then(function (profile) {
-                                        if (profile.displayName) {
-                                            return profile;
-                                        } else {
-                                            $location.url('/ycombinator/profile');
-                                        }
-                                    })
-                                    .catch(function (error) {
-                                        console.log('__>> ERROR - Unable to get the users profile, error: ', error);
-                                    });
-                            })
-                            .catch(function (error) {
-                                console.log('__>> ERROR - The user is not signed in, error: ', error);
-                                $location.url('/ycombinator/home');
-                            });
+                                        .then(function (authUser) {
+                                            return ycUsersSer.getProfile(authUser.uid).$loaded()
+                                                             .then(function (profile) {
+                                                                 if (profile.displayName) {
+                                                                     return profile;
+                                                                 }
+                                                                 else {
+                                                                     $location.url('/ycombinator/profile');
+                                                                 }
+                                                             })
+                                                             .catch(function (error) {
+                                                                 console.log('__>> ERROR - Unable to get the users profile, error: ', error);
+                                                             });
+                                        })
+                                        .catch(function (error) {
+                                            console.log('__>> ERROR - The user is not signed in, error: ', error);
+                                            $location.url('/ycombinator/home');
+                                        });
                     }
                 }
             })
@@ -172,7 +253,7 @@ angular.module('rsCloudApp', [
                     channelNameRsv: function ($route, ycChannelsSer) {
                         // we're not using $loaded() here... Hmmm. I wonder why.
                         return '#' + ycChannelsSer.channels.$loaded()
-                            .$getRecord($route.current.params.channelId).name;
+                                                  .$getRecord($route.current.params.channelId).name;
                     },
                     profileRsv: function ($location, ycAuthSer, ycUsersSer) {
                         return ycAuthSer.auth.$requireSignIn(
@@ -182,7 +263,8 @@ angular.module('rsCloudApp', [
                                     var displayName = profile.displayName;
                                     if (displayName) {
                                         return displayName;
-                                    } else {
+                                    }
+                                    else {
                                         $location.url('/ycombinator/profile');
                                     }
                                 }).catch(function (error) {
@@ -200,13 +282,13 @@ angular.module('rsCloudApp', [
                 }
             })
 
-            // Edhub states -
-            .when('/landing', {
+            // Edhub states - 9 states:
+            .when('/edhub/landing', {
                 templateUrl: 'states/landing/view.map-landing.html',
                 controller: 'LandingCtrl',
                 controllerAs: 'landingCtrl'
             })
-            .when('/signup', {
+            .when('/edhub/signup', {
                 templateUrl: 'states/auth/view.tab.join.html',
                 controller: 'AuthCtrl',
                 controllerAs: 'signup',
@@ -219,7 +301,7 @@ angular.module('rsCloudApp', [
                     }
                 }
             })
-            .when('/login', {
+            .when('/edhub/login', {
                 templateUrl: 'states/auth/view.login.html',
                 controller: 'AuthCtrl',
                 controllerAs: 'login',
@@ -232,15 +314,15 @@ angular.module('rsCloudApp', [
                     }
                 }
             })
-            .when('/profile/:user', {
+            .when('/edhub/profile/:user', {
                 templateUrl: 'states/auth/view.profile.html'
             })
-            .when('/apply', {
+            .when('/edhub/apply', {
                 templateUrl: 'states/apply/view.apply.html',
                 controller: 'ApplyToJobCtrl',
                 controllerAs: 'applyToJobCtrl'
             })
-            .when('/apply/:orgId/:orgName', {
+            .when('/edhub/apply/:orgId/:orgName', {
                 templateUrl: 'states/apply/view.apply.org.html',
                 controller: 'ApplyToOrgCtrl',
                 controllerAs: 'applyToOrgCtrl',
@@ -250,17 +332,17 @@ angular.module('rsCloudApp', [
                     }
                 }
             })
-            .when('/apply-job/:orgName/:jobId', {
+            .when('/edhub/apply-job/:orgName/:jobId', {
                 templateUrl: 'states/apply/view.apply.job-org.html',
                 controller: 'ApplyToJobCtrl',
                 controllerAs: 'applyToJobCtrl'
             })
-            .when('/org/apps', {
+            .when('/edhub/org/apps', {
                 templateUrl: 'states/org-apps/view.org-apps.html',
                 controller: 'OrgApplicantsCtrl',
                 controllerAs: 'orgApps' // cOrgApplicants
             })
-            .when('/view-job/:orgId/:orgName', {
+            .when('/edhub/view-job/:orgId/:orgName', {
                 templateUrl: 'states/apply/view.view-job.html',
                 controller: 'ApplyToOrgCtrl',
                 controllerAs: 'cApplyToOrg',
@@ -272,21 +354,22 @@ angular.module('rsCloudApp', [
                 }
             })
 
+
             // go to base url
             .otherwise('/');
 
-        // Initialize Firebase
-        /*
-        const config = {
-            apiKey: "AIzaSyDEyWzMw0NPhKUnjWTNsYeqAWazk5cR_LI",
-            authDomain: "edhub-jobs.firebaseapp.com",
-            databaseURL: "https://edhub-jobs.firebaseio.com",
-            projectId: "edhub-jobs",
-            storageBucket: "edhub-jobs.appspot.com",
-            messagingSenderId: "743478741402",
-            appId: "1:743478741402:web:0923603feffd9137"
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBiWzqiziBRqAkJzshxK2bALZbsxCsvO8M",
+            authDomain: "redstone-auto.firebaseapp.com",
+            databaseURL: "https://redstone-auto.firebaseio.com",
+            projectId: "redstone-auto",
+            storageBucket: "redstone-auto.appspot.com",
+            messagingSenderId: "792273302054",
+            appId: "1:792273302054:web:f97b23a3d4ed3987906ce7",
+            measurementId: "G-XZR8MYEW2R"
         };
-        firebase.initializeApp(config);
-        */
+        // Init Firebase
+        firebase.initializeApp(firebaseConfig);
     }
 ]);

@@ -6,13 +6,12 @@
     'use strict';
 
     angular.module('rsCloudApp').factory('rsAuth', [
-        '$firebaseAuth', '$rootScope', '$firebaseObject',
-        '$location', '$q',
+        '$q', '$firebaseAuth', '$rootScope', '$firebaseObject', '$location',
         RedstoneAuthClass
     ]);
 
     function RedstoneAuthClass(
-        $firebaseAuth, $rootScope, $firebaseObject, $location, $q
+        $q, $firebaseAuth, $rootScope, $firebaseObject, $location
     ) {
         $rootScope.rsmAuthUser = '';
         const orgRef = firebase.database().ref('organizations');
@@ -22,12 +21,18 @@
 
         auth.$onAuthStateChanged(function (authUser) {
             if (authUser) {
+                console.log('IS authenticated - auth state changed', authUser);
+
                 let authUserRef = orgRef.child(authUser.uid);
+
                 $rootScope.rsmAuthUser = $firebaseObject(authUserRef);
                 $rootScope.$broadcast("edhub-event-auth-user", {
                     haveAuthUser: true
                 });
-            } else {
+            }
+            else {
+                console.log('NOT authenticated - auth state changed');
+
                 $rootScope.rsmAuthUser = "";
                 $rootScope.$broadcast("edhub-event-auth-user", {
                     haveAuthUser: false
@@ -37,29 +42,34 @@
 
         authApi = {
             login: function (user, info) {
-                auth.$signInWithEmailAndPassword(user.email, user.password)
+                auth.$signInWithEmailAndPassword(user.email, user.pass)
                     .then(function (authUser) {
-                        // console.log("edhub - user successfully signed in");
-                        // console.log(authUser);
                         if (!!info.path) {
-                            $location.path('/' + info.path);
-                        } else {
-                            $location.path('/');
+                            // SUPER SPECIAL HARD CODED ui-states:
+                            if (authUser.email === 'idea-engine@rs.app') {
+                                $location.path('/' + info.path);
+                            }
+                            else {
+                                $location.path('/cart');
+                            }
+                        }
+                        else {
+                            $location.path('/data');
                         }
                     })
                     .catch(function (error) {
-                        console.error("edhub - There was an error =");
-                        console.log(error.message);
+                        console.error("redstone - There was an error =");
+                        console.error(error.message);
                         $rootScope.rootAuthError = error.message;
                     });
             },
             logout: function () {
                 return auth.$signOut();
             },
-            requireAuth: function () {
-                return auth.requireSignIn();
+            auth: function () {
+                return auth;
             },
-            signup: function (user, info) {
+            signUp: function (user, info) {
                 // give 'info a default value if nothing got passed in
                 info = !!info ? info : {};
                 auth.$createUserWithEmailAndPassword(user.email, user.password)
@@ -93,33 +103,36 @@
             },
             facebookSignIn: function () {
                 firebase.auth().signInWithPopup(facebookProvider)
-                    .then(function (res) {
-                        let token = res.credential.accessToken;
-                        let user = res.user;
-                        $scope.$apply(function () {
-                            $rootScope.rootEdhubAuthUser = user.email;
+                        .then(function (res) {
+                            let token = res.credential.accessToken;
+                            let user = res.user;
+                            $scope.$apply(function () {
+                                $rootScope.rootEdhubAuthUser = user.email;
+                            });
+
+
+                            // log on success results
+                            console.log('__>> SUCCESS - Facebook login ');
+                            //console.log(token);
+                            console.log(user);
+                            console.log(user.email);
+                        })
+                        .catch(function (error) {
+                            let errorCode = error.code;
+                            let errorMessage = error.message;
+                            let email = error.email;
+                            let credential = error.credential;
+
+                            // log error results :(
+                            console.log('__>> ERROR - There were Facebook Auth');
+                            console.log(errorCode);
+                            console.log(errorMessage);
+                            console.log(email);
+                            console.log(credential);
                         });
-
-
-                        // log on success results
-                        console.log('__>> SUCCESS - Facebook login ');
-                        //console.log(token);
-                        console.log(user);
-                        console.log(user.email);
-                    })
-                    .catch(function (error) {
-                        let errorCode = error.code;
-                        let errorMessage = error.message;
-                        let email = error.email;
-                        let credential = error.credential;
-
-                        // log error results :(
-                        console.log('__>> ERROR - There were Facebook Auth');
-                        console.log(errorCode);
-                        console.log(errorMessage);
-                        console.log(email);
-                        console.log(credential);
-                    });
+            },
+            ccRed: function() {
+                return '@rs.app';
             }
         };
 

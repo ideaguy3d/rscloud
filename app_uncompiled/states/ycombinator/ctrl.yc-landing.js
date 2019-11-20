@@ -3,7 +3,7 @@
  */
 
 (function () {
-    "use strict";
+    'use strict';
 
     angular.module('edhubJobsApp').controller('YCombinatorLandingCtrl', [
         'edhubJobPostService', '$location', 'smoothScroll', 'OrgListSer',
