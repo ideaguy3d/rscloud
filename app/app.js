@@ -8,10 +8,25 @@ angular.module('rsCloudApp', [
                 controller: 'LandingCtrl',
                 controllerAs: 'cLanding'
             })
-            .when('/data', {
-                templateUrl: 'states/data/view.data.html',
-                controller: 'LandingCtrl',
-                controllerAs: 'landingCtrl'
+            .when('/cost-automation', {
+                templateUrl: '',
+                controller: '',
+                controllerAs: ''
+            })
+            .when('/lightning-preprocessor', {
+                templateUrl: '',
+                controller: '',
+                controllerAs: ''
+            })
+            .when('/customer-training', {
+                templateUrl: '',
+                controller: '',
+                controllerAs: ''
+            })
+            .when('/apps', {
+                templateUrl: '',
+                controller: '',
+                controllerAs: ''
             })
             .when('/idea-engine', {
                 templateUrl: 'states/idea-engine/view.idea-engine.html',
@@ -19,19 +34,45 @@ angular.module('rsCloudApp', [
                 controllerAs: 'cIdeaEngine',
                 resolve: {
                     authRsv: function ($location, rsAuth) {
-                        console.log('__> 1');
                         rsAuth.auth().$requireSignIn()
                               .then(function (authUser) {
-                                  console.log('__> 2');
-                                  return authUser.email;
+                                  console.log(`authUser {authUser.email}:`);
+                                  console.log(authUser.email);
+                                  console.log(authUser);
+                                  if(authUser.email === 'idea-engine@rs.app') {
+                                      return authUser.email;
+                                  }
+
                               })
                               .catch(function (notAuthUser) {
-                                  console.log('__> 3');
                                   $location.url('/');
                               });
                     }
                 }
             })
+            .when('/data', {
+                templateUrl: 'states/data/view.data.html',
+                controller: 'LandingCtrl',
+                controllerAs: 'landingCtrl'
+            })
+            .when('/cart', {
+                templateUrl: 'states/cart/view.cart.html'
+            })
+            .when('/logout', {
+                resolve: {
+                    logout: function (rsAuth, $location) {
+                        rsAuth.logout();
+                        $location.url('/');
+                    }
+                }
+            })
+
+            /*********************************************
+             * Other UI States to use as reference code *
+             ********************************************/
+
+
+            // Y Combinator states - 8 states
             .when('/chat', {
                 templateUrl: 'states/ycombinator/chat/view.yc-home.html',
                 controller: 'ycAuthCtrl',
@@ -52,17 +93,6 @@ angular.module('rsCloudApp', [
                     }
                 }
             })
-            .when('/cart', {
-                templateUrl: 'states/cart/view.cart.html'
-            })
-
-
-            /*********************************************
-             * Other UI States to use as reference code *
-             ********************************************/
-
-
-            // Y Combinator states - 8 states
             .when('/ycombinator/positions', {
                 templateUrl: 'states/ycombinator/view.yc-landing.html',
                 controller: 'YCombinatorLandingCtrl',
@@ -222,12 +252,12 @@ angular.module('rsCloudApp', [
             })
 
             // Edhub states -
-            .when('/landing', {
+            .when('/edhub/landing', {
                 templateUrl: 'states/landing/view.map-landing.html',
                 controller: 'LandingCtrl',
                 controllerAs: 'landingCtrl'
             })
-            .when('/signup', {
+            .when('/edhub/signup', {
                 templateUrl: 'states/auth/view.tab.join.html',
                 controller: 'AuthCtrl',
                 controllerAs: 'signup',
@@ -240,7 +270,7 @@ angular.module('rsCloudApp', [
                     }
                 }
             })
-            .when('/login', {
+            .when('/edhub/login', {
                 templateUrl: 'states/auth/view.login.html',
                 controller: 'AuthCtrl',
                 controllerAs: 'login',
@@ -253,15 +283,15 @@ angular.module('rsCloudApp', [
                     }
                 }
             })
-            .when('/profile/:user', {
+            .when('/edhub/profile/:user', {
                 templateUrl: 'states/auth/view.profile.html'
             })
-            .when('/apply', {
+            .when('/edhub/apply', {
                 templateUrl: 'states/apply/view.apply.html',
                 controller: 'ApplyToJobCtrl',
                 controllerAs: 'applyToJobCtrl'
             })
-            .when('/apply/:orgId/:orgName', {
+            .when('/edhub/apply/:orgId/:orgName', {
                 templateUrl: 'states/apply/view.apply.org.html',
                 controller: 'ApplyToOrgCtrl',
                 controllerAs: 'applyToOrgCtrl',
@@ -271,17 +301,17 @@ angular.module('rsCloudApp', [
                     }
                 }
             })
-            .when('/apply-job/:orgName/:jobId', {
+            .when('/edhub/apply-job/:orgName/:jobId', {
                 templateUrl: 'states/apply/view.apply.job-org.html',
                 controller: 'ApplyToJobCtrl',
                 controllerAs: 'applyToJobCtrl'
             })
-            .when('/org/apps', {
+            .when('/edhub/org/apps', {
                 templateUrl: 'states/org-apps/view.org-apps.html',
                 controller: 'OrgApplicantsCtrl',
                 controllerAs: 'orgApps' // cOrgApplicants
             })
-            .when('/view-job/:orgId/:orgName', {
+            .when('/edhub/view-job/:orgId/:orgName', {
                 templateUrl: 'states/apply/view.view-job.html',
                 controller: 'ApplyToOrgCtrl',
                 controllerAs: 'cApplyToOrg',
@@ -292,14 +322,7 @@ angular.module('rsCloudApp', [
                     }
                 }
             })
-            .when('/logout', {
-                resolve: {
-                    logout: function (rsAuth, $location) {
-                        rsAuth.logout();
-                        $location.url('/login'); 
-                    }
-                }
-            })
+
 
             // go to base url
             .otherwise('/');

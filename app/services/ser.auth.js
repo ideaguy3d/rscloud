@@ -67,11 +67,9 @@
                 return auth.$signOut();
             },
             auth: function () {
-                console.log('__>> 4');
-                //return auth.$requireSignIn();
                 return auth;
             },
-            signup: function (user, info) {
+            signUp: function (user, info) {
                 // give 'info a default value if nothing got passed in
                 info = !!info ? info : {};
                 auth.$createUserWithEmailAndPassword(user.email, user.password)
