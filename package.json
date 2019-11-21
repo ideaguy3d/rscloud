@@ -42,7 +42,7 @@
   },
   "scripts": {
       "test": "grunt test",
-      "build": "babel app -d app"
+      "babel": "babel app -d app"
   },
   "dependencies": {}
 }

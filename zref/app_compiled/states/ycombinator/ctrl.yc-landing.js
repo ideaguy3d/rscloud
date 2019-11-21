@@ -4,7 +4,7 @@
  * Created by Julius Alvarado on 3/4/2019.
  */
 (function () {
-  "use strict";
+  'use strict';
 
   angular.module('edhubJobsApp').controller('YCombinatorLandingCtrl', ['edhubJobPostService', '$location', 'smoothScroll', 'OrgListSer', '$rootScope', LandingClass]);
 

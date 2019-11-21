@@ -6,11 +6,13 @@
 (function () {
   'use strict';
 
-  var yc = '/ycombinator/'; //-- SERVICES --\\
+  var yc = '/ycombinator/';
+  /******** SERVICES ********/
   // ycAuthSer
 
   function SerAuthClass($firebaseAuth) {
     var auth = $firebaseAuth();
+    console.log('rscloud Auth Service invoked');
     return {
       auth: auth
     };
@@ -84,7 +86,8 @@
       forChannel: forChannel,
       forUsers: forUsers
     };
-  } //-- CONTROLLERS --\\
+  }
+  /******** CONTROLLERS ********/
   // ycAuthCtrl
 
 
@@ -252,7 +255,7 @@
     };
   }
 
-  angular.module('edhubJobsApp') // SERVICES
+  angular.module('rsCloudApp') // SERVICES
   .factory('ycAuthSer', ['$firebaseAuth', SerAuthClass]).factory('ycUsersSer', ['$firebaseArray', '$firebaseObject', SerUsersClass]).factory('ycChannelsSer', ['$firebaseArray', SerChannelsClass]).factory('ycMessagesSer', ['$firebaseArray', SerMessagesClass]) // CONTROLLERS
   .controller('ycAuthCtrl', ['ycAuthSer', '$location', CtrlAuthClass]).controller('ycProfileCtrl', ['$location', 'md5', 'authRsv', 'profileRsv', '$timeout', CtrlProfileClass]).controller('ycChannelsCtrl', ['$location', 'ycAuthSer', 'ycUsersSer', 'profileRsv', 'channelsRsv', 'ycMessagesSer', 'ycChannelsSer', CtrlChannelsClass]).controller('ycMessagesCtrl', ['messagesRsv', 'channelNameRsv', 'profileRsv', CtrlMessagesClass]);
 })();

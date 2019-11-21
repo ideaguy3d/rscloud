@@ -6,54 +6,64 @@
 (function () {
   'use strict';
 
-  angular.module('rsCloudApp').factory('rsAuth', ['$firebaseAuth', '$rootScope', '$firebaseObject', '$location', '$q', RedstoneAuthClass]);
+  angular.module('rsCloudApp').factory('rsAuth', ['$q', '$firebaseAuth', '$rootScope', '$firebaseObject', '$location', RedstoneAuthClass]);
 
-  function RedstoneAuthClass($firebaseAuth, $rootScope, $firebaseObject, $location, $q) {
+  function RedstoneAuthClass($q, $firebaseAuth, $rootScope, $firebaseObject, $location) {
     $rootScope.rsmAuthUser = '';
     var orgRef = firebase.database().ref('organizations');
-    var auth = $firebaseAuth();
+
+    var _auth = $firebaseAuth();
+
     var authApi = {};
     var facebookProvider = new firebase.auth.FacebookAuthProvider();
-    auth.$onAuthStateChanged(function (authUser) {
+
+    _auth.$onAuthStateChanged(function (authUser) {
       if (authUser) {
+        console.log('IS authenticated - auth state changed', authUser);
         var authUserRef = orgRef.child(authUser.uid);
         $rootScope.rsmAuthUser = $firebaseObject(authUserRef);
         $rootScope.$broadcast("edhub-event-auth-user", {
           haveAuthUser: true
         });
       } else {
+        console.log('NOT authenticated - auth state changed');
         $rootScope.rsmAuthUser = "";
         $rootScope.$broadcast("edhub-event-auth-user", {
           haveAuthUser: false
         });
       }
     });
+
     authApi = {
       login: function login(user, info) {
-        auth.$signInWithEmailAndPassword(user.email, user.password).then(function (authUser) {
-          // console.log("edhub - user successfully signed in");
-          // console.log(authUser);
+        _auth.$signInWithEmailAndPassword(user.email, user.pass).then(function (authUser) {
           if (!!info.path) {
-            $location.path('/' + info.path);
+            // SUPER SPECIAL HARD CODED ui-states:
+            if (authUser.email === 'idea-engine@rs.app') {
+              $location.path('/' + info.path);
+            } else {
+              $location.path('/cart');
+            }
           } else {
-            $location.path('/');
+            $location.path('/data');
           }
         })["catch"](function (error) {
-          console.error("edhub - There was an error =");
-          console.log(error.message);
+          console.error("redstone - There was an error =");
+          console.error(error.message);
           $rootScope.rootAuthError = error.message;
         });
       },
       logout: function logout() {
-        return auth.$signOut();
+        return _auth.$signOut();
       },
-      requireAuth: function requireAuth() {
-        return auth.requireSignIn();
+      auth: function auth() {
+        return _auth;
       },
-      signup: function signup(user, info) {
+      signUp: function signUp(user, info) {
         // give 'info a default value if nothing got passed in
         info = !!info ? info : {};
-        auth.$createUserWithEmailAndPassword(user.email, user.password).then(function (regUser) {
+
+        _auth.$createUserWithEmailAndPassword(user.email, user.password).then(function (regUser) {
           orgRef.child(regUser.uid).set({
             date: firebase.database.ServerValue.TIMESTAMP,
             regUser: regUser.uid,
@@ -105,6 +115,9 @@
           console.log(email);
           console.log(credential);
         });
+      },
+      ccRed: function ccRed() {
+        return '@rs.app';
       }
     }; // return $firebaseAuth(), we are returning it in as an obj
     // because .signup does a recursive call to .login

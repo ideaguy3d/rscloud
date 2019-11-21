@@ -12,10 +12,11 @@
             </p>
         </div>
     
-        <form class="rsm-auth-form-landing" data-ng-submit="s_mockLogin()">
+        <form class="rsm-auth-form-landing" data-ng-submit="s_login()">
             <h1 class="rsm-auth-h1">Authentication</h1>
             <p style="color: darkred">{{cLanding.error}}</p>
-            <!-- organization name -->
+
+            <!-- email input -->
             <md-input-container class="md-icon-float md-block flex-gt-sm">
                 <label>Email</label>
                 <!--<md-icon md-svg-src="images/svg/business.svg"></md-icon>-->
@@ -25,7 +26,7 @@
                 </div>
             </md-input-container>
     
-            <!-- name -->
+            <!-- pass input -->
             <md-input-container class="md-icon-float md-block flex-gt-sm">
                 <label>Password</label>
                 <!--<md-icon md-svg-src="images/svg/pencil.svg"></md-icon>-->
@@ -40,6 +41,7 @@
                 <md-button type="submit" class="md-raised rsm-btn-round">
                     Login
                 </md-button>
+                <p>&nbsp;&nbsp; {{cLanding.user.email + ", " + cLanding.user.pass}}</p>
             </div>
         </form>
     </section>

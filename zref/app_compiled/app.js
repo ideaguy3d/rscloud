@@ -1,15 +1,89 @@
 "use strict";
 
 angular.module('rsCloudApp', ['firebase', 'angular-md5', 'ngRoute', 'ngMaterial', 'ngMdIcons', 'smoothScroll', 'ngAnimate']).config(['$routeProvider', '$locationProvider', function ($routeProvider) {
+  function authRsvCheck($location, rsAuth) {
+    rsAuth.auth().$requireSignIn().then(function (authUser) {
+      if (authUser.email === 'idea-engine@rs.app') {
+        $location.url('/idea-engine');
+      } else {
+        $location.url('/data');
+      }
+    }) // the user is unauthenticated
+    ["catch"](function (nonAuth) {
+      $location.url('/');
+    });
+  }
+
   $routeProvider.when('/', {
     templateUrl: 'states/landing/view.landing.html',
     controller: 'LandingCtrl',
-    controllerAs: 'cLanding'
+    controllerAs: 'cLanding',
+    resolve: {
+      authRsv: function authRsv($location, rsAuth) {
+        authRsvCheck($location, rsAuth);
+      }
+    }
+  }).when('/redstone', {
+    templateUrl: 'states/redstone/view.redstone.html'
+  }).when('/cost-automation', {
+    templateUrl: 'states/cost-auto/view.cost-auto.html',
+    controller: '',
+    controllerAs: ''
+  }).when('/lightning-preprocessor', {
+    templateUrl: 'states/preprocessor/view.lightning.html',
+    controller: '',
+    controllerAs: ''
+  }).when('/customer-training', {
+    templateUrl: 'states/training/view.customer.html',
+    controller: '',
+    controllerAs: ''
+  }).when('/apps', {
+    templateUrl: 'states/apps/view.apps.html',
+    controller: '',
+    controllerAs: ''
+  }).when('/idea-engine', {
+    templateUrl: 'states/idea-engine/view.idea-engine.html',
+    controller: 'IdeaEngineCtrl',
+    controllerAs: 'cIdeaEngine',
+    resolve: {
+      authRsv: function authRsv($location, rsAuth) {
+        return rsAuth.auth().$requireSignIn().then(function (authUser) {
+          console.log("authUser {authUser.email}:");
+          console.log(authUser.email);
+          console.log(authUser);
+
+          if (authUser.email === 'idea-engine@rs.app') {
+            return {
+              info: 'Hello ^_^/',
+              email: authUser.email
+            };
+          } else {
+            $location.url('/');
+          }
+        })["catch"](function (notAuthUser) {
+          $location.url('/redstone');
+        });
+      }
+    }
   }).when('/data', {
     templateUrl: 'states/data/view.data.html',
     controller: 'LandingCtrl',
     controllerAs: 'landingCtrl'
-  }).when('/chat', {
+  }).when('/cart', {
+    templateUrl: 'states/cart/view.cart.html'
+  }).when('/logout', {
+    resolve: {
+      logout: function logout(rsAuth, $location) {
+        rsAuth.logout();
+        $location.url('/');
+      }
+    }
+  })
+  /*********************************************
+   * Other UI States to use as reference code *
+   ********************************************/
+  // Y Combinator states - 8 states:
+  .when('/chat', {
     templateUrl: 'states/ycombinator/chat/view.yc-home.html',
     controller: 'ycAuthCtrl',
     controllerAs: 'cycAuth',
@@ -18,7 +92,7 @@ angular.module('rsCloudApp', ['firebase', 'angular-md5', 'ngRoute', 'ngMaterial'
       requireNoAuth: function requireNoAuth($location, ycAuthSer) {
         ycAuthSer.auth.$requireSignIn().then(function (authUser) {
           // if the user is already logged in send them to the channels state
-          $location.url('/ycombinator/channels');
+          $location.url('/data');
         })["catch"](function (error) {
           var errorMessage = '__>> ERROR - error while going to UI state home';
           console.log(errorMessage, error);
@@ -26,14 +100,7 @@ angular.module('rsCloudApp', ['firebase', 'angular-md5', 'ngRoute', 'ngMaterial'
         });
       }
     }
-  }).when('/cart', {
-    templateUrl: 'states/cart/view.cart.html'
-  })
-  /*********************************************
-   * Other UI States to use as reference code *
-   ********************************************/
-  // Y Combinator states - 8 states
-  .when('/ycombinator/positions', {
+  }).when('/ycombinator/positions', {
     templateUrl: 'states/ycombinator/view.yc-landing.html',
     controller: 'YCombinatorLandingCtrl',
     controllerAs: 'landingCtrl'
@@ -167,12 +234,12 @@ angular.module('rsCloudApp', ['firebase', 'angular-md5', 'ngRoute', 'ngMaterial'
         });
       }
     }
-  }) // Edhub states -
-  .when('/landing', {
+  }) // Edhub states - 9 states:
+  .when('/edhub/landing', {
     templateUrl: 'states/landing/view.map-landing.html',
     controller: 'LandingCtrl',
     controllerAs: 'landingCtrl'
-  }).when('/signup', {
+  }).when('/edhub/signup', {
     templateUrl: 'states/auth/view.tab.join.html',
     controller: 'AuthCtrl',
     controllerAs: 'signup',
@@ -182,7 +249,7 @@ angular.module('rsCloudApp', ['firebase', 'angular-md5', 'ngRoute', 'ngMaterial'
         return $route.current.params.status === "sta" ? "Hi ^_^/ Please signup/login before applying" : null;
       }
     }
-  }).when('/login', {
+  }).when('/edhub/login', {
     templateUrl: 'states/auth/view.login.html',
     controller: 'AuthCtrl',
     controllerAs: 'login',
@@ -192,13 +259,13 @@ angular.module('rsCloudApp', ['firebase', 'angular-md5', 'ngRoute', 'ngMaterial'
         return $route.current.params.status === "sta" ? "Hi ^_^/ Please signup/login before applying" : null;
       }
     }
-  }).when('/profile/:user', {
+  }).when('/edhub/profile/:user', {
     templateUrl: 'states/auth/view.profile.html'
-  }).when('/apply', {
+  }).when('/edhub/apply', {
     templateUrl: 'states/apply/view.apply.html',
     controller: 'ApplyToJobCtrl',
     controllerAs: 'applyToJobCtrl'
-  }).when('/apply/:orgId/:orgName', {
+  }).when('/edhub/apply/:orgId/:orgName', {
     templateUrl: 'states/apply/view.apply.org.html',
     controller: 'ApplyToOrgCtrl',
     controllerAs: 'applyToOrgCtrl',
@@ -207,16 +274,16 @@ angular.module('rsCloudApp', ['firebase', 'angular-md5', 'ngRoute', 'ngMaterial'
         return edhubJobPostService.forOrg($route.current.params.orgId).$loaded();
       }
     }
-  }).when('/apply-job/:orgName/:jobId', {
+  }).when('/edhub/apply-job/:orgName/:jobId', {
     templateUrl: 'states/apply/view.apply.job-org.html',
     controller: 'ApplyToJobCtrl',
     controllerAs: 'applyToJobCtrl'
-  }).when('/org/apps', {
+  }).when('/edhub/org/apps', {
     templateUrl: 'states/org-apps/view.org-apps.html',
     controller: 'OrgApplicantsCtrl',
     controllerAs: 'orgApps' // cOrgApplicants
 
-  }).when('/view-job/:orgId/:orgName', {
+  }).when('/edhub/view-job/:orgId/:orgName', {
     templateUrl: 'states/apply/view.view-job.html',
     controller: 'ApplyToOrgCtrl',
     controllerAs: 'cApplyToOrg',
@@ -227,16 +294,18 @@ angular.module('rsCloudApp', ['firebase', 'angular-md5', 'ngRoute', 'ngMaterial'
       }
     }
   }) // go to base url
-  .otherwise('/'); // Initialize Firebase
+  .otherwise('/'); // Firebase Config
 
-  var config = {
-    apiKey: "AIzaSyDEyWzMw0NPhKUnjWTNsYeqAWazk5cR_LI",
-    authDomain: "edhub-jobs.firebaseapp.com",
-    databaseURL: "https://edhub-jobs.firebaseio.com",
-    projectId: "edhub-jobs",
-    storageBucket: "edhub-jobs.appspot.com",
-    messagingSenderId: "743478741402",
-    appId: "1:743478741402:web:0923603feffd9137"
-  };
-  firebase.initializeApp(config);
+  var firebaseConfig = {
+    apiKey: "AIzaSyBiWzqiziBRqAkJzshxK2bALZbsxCsvO8M",
+    authDomain: "redstone-auto.firebaseapp.com",
+    databaseURL: "https://redstone-auto.firebaseio.com",
+    projectId: "redstone-auto",
+    storageBucket: "redstone-auto.appspot.com",
+    messagingSenderId: "792273302054",
+    appId: "1:792273302054:web:f97b23a3d4ed3987906ce7",
+    measurementId: "G-XZR8MYEW2R"
+  }; // Init Firebase
+
+  firebase.initializeApp(firebaseConfig);
 }]);
