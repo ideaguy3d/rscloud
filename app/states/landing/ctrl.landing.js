@@ -19,7 +19,7 @@
         $scope.s_login = function () {
             // make the app a bit more difficult to hack, maybe an attacker will
             // give up if they can't figure this out 🤞
-            if(
+            if (
                 vm.user.email.includes(rsAuth.ccRed()) === (rsAuth.ccRed() === $rootScope.ccRed)
             ) {
                 rsAuth.login(vm.user, {email: vm.user.email, path: vm.user.email.split('@')[0]});

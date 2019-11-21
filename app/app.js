@@ -4,13 +4,20 @@ angular.module('rsCloudApp', [
     function ($routeProvider) {
 
         function authRsvCheck($location, rsAuth) {
+
+            console.log("__>> checking if User is authenticated");
+
             rsAuth.auth().$requireSignIn()
                   .then(function (authUser) {
-                      if(authUser.email === 'idea-engine@rs.app') {
+                      if (authUser.email === 'idea-engine@rs.app') {
+                          console.log("__>> User is idea engine");
+
                           $location.url('/idea-engine');
                       }
                       else {
-                          $location.url('/data');
+                          console.log("__>> User is authenticated");
+
+                          $location.url('/redstone');
                       }
                   })
                   // the user is unauthenticated
@@ -31,7 +38,9 @@ angular.module('rsCloudApp', [
                 }
             })
             .when('/redstone', {
-                templateUrl: 'states/redstone/view.redstone.html'
+                templateUrl: 'states/redstone/view.redstone.html',
+                controller: 'RedstoneCtrl',
+                controllerAs: 'cRedstone'
             })
             .when('/cost-automation', {
                 templateUrl: 'states/cost-auto/view.cost-auto.html',
@@ -60,38 +69,32 @@ angular.module('rsCloudApp', [
                 resolve: {
                     authRsv: function ($location, rsAuth) {
                         return rsAuth.auth().$requireSignIn()
-                              .then(function (authUser) {
-                                  console.log(`authUser {authUser.email}:`);
-                                  console.log(authUser.email);
-                                  console.log(authUser);
-                                  if(authUser.email === 'idea-engine@rs.app') {
-                                      return {
-                                          info: 'Hello ^_^/',
-                                          email: authUser.email
-                                      };
-                                  }
-                                  else{
-                                      $location.url('/')
-                                  }
+                                     .then(function (authUser) {
+                                         console.log(`authUser {authUser.email}:`);
+                                         console.log(authUser.email);
+                                         console.log(authUser);
 
-                              })
-                              .catch(function (notAuthUser) {
-                                  $location.url('/redstone');
-                              });
+                                         if (authUser.email === 'idea-engine@rs.app') {
+                                             return {
+                                                 info: 'Hello ^_^/',
+                                                 email: authUser.email
+                                             };
+                                         }
+                                         else {
+                                             $location.url('/redstone')
+                                         }
+                                     })
+                                     // the user is unauthenticated
+                                     .catch(function (notAuthUser) {
+                                         $location.url('/');
+                                     });
                     }
                 }
-            })
-            .when('/data', {
-                templateUrl: 'states/data/view.data.html',
-                controller: 'LandingCtrl',
-                controllerAs: 'landingCtrl'
-            })
-            .when('/cart', {
-                templateUrl: 'states/cart/view.cart.html'
             })
             .when('/logout', {
                 resolve: {
                     logout: function (rsAuth, $location) {
+                        console.log("__>> IN '/logout' ui state");
                         rsAuth.logout();
                         $location.url('/');
                     }
@@ -103,7 +106,8 @@ angular.module('rsCloudApp', [
              * Other UI States to use as reference code *
              ********************************************/
 
-            // Y Combinator states - 8 states:
+            /*
+             // Y Combinator states - 8 states:
             .when('/chat', {
                 templateUrl: 'states/ycombinator/chat/view.yc-home.html',
                 controller: 'ycAuthCtrl',
@@ -281,7 +285,10 @@ angular.module('rsCloudApp', [
                     }
                 }
             })
+            */
 
+
+            /*
             // Edhub states - 9 states:
             .when('/edhub/landing', {
                 templateUrl: 'states/landing/view.map-landing.html',
@@ -353,7 +360,7 @@ angular.module('rsCloudApp', [
                     }
                 }
             })
-
+            */
 
             // go to base url
             .otherwise('/');
