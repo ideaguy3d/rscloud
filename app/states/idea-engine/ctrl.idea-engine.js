@@ -16,8 +16,8 @@
         vm.infoRsv = authRsv.info;
 
         vm.out = function () {
-            console.log('user should be sent to /logout route...');
-            $location.url('/logout');
+            console.log('...user should be sent to get logged out');
+            rsAuth.auth().$signOut();
         };
     }
 

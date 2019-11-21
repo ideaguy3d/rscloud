@@ -9,11 +9,12 @@
         RedstoneCtrlClass
     ]);
 
-    function RedstoneCtrlClass($location, smoothScroll, $rootScope, $scope) {
+    function RedstoneCtrlClass($location, smoothScroll, $rootScope, $scope, rsAuth) {
         const vm = this;
 
         vm.out = function () {
-            $location.url('/logout');
+            console.log('...user should be sent to get logged out');
+            rsAuth.auth().$signOut();
         }
     }
 
