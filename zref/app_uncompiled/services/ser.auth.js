@@ -21,20 +21,21 @@
 
         auth.$onAuthStateChanged(function (authUser) {
             if (authUser) {
-                console.log('IS authenticated - auth state changed', authUser);
+                console.log('USER IS authenticated - auth state changed');
 
                 let authUserRef = orgRef.child(authUser.uid);
 
                 $rootScope.rsmAuthUser = $firebaseObject(authUserRef);
-                $rootScope.$broadcast("edhub-event-auth-user", {
-                    haveAuthUser: true
+                $rootScope.$broadcast("redstone-event-auth-user", {
+                    haveAuthUser: true,
+                    email: authUser.email
                 });
             }
             else {
-                console.log('NOT authenticated - auth state changed');
-
+                console.log('USER NOT authenticated - auth state changed');
+                $location.url('/');
                 $rootScope.rsmAuthUser = "";
-                $rootScope.$broadcast("edhub-event-auth-user", {
+                $rootScope.$broadcast("redstone-event-auth-user", {
                     haveAuthUser: false
                 });
             }
@@ -62,9 +63,6 @@
                         console.error(error.message);
                         $rootScope.rootAuthError = error.message;
                     });
-            },
-            logout: function () {
-                return auth.$signOut();
             },
             auth: function () {
                 return auth;
