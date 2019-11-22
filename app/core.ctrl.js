@@ -6,20 +6,19 @@
     'use strict';
 
     angular.module('rsCloudApp').controller('CoreCtrl', [
-        '$rootScope', '$scope', '$mdSidenav', '$mdDialog',
-        '$timeout', '$location',
+        '$rootScope', '$scope', '$mdSidenav', '$mdDialog', '$timeout', '$location', 'rsAuth',
         CoreClass
     ]);
 
     function CoreClass(
-        $rootScope, $scope, $mdSidenav, $mdDialog, $timeout, $location
+        $rootScope, $scope, $mdSidenav, $mdDialog, $timeout, $location, rsAuth
     ) {
         $scope.ccCurrentUser = "";
-        $scope.coreEdhubHorizontalState = true;
+        $scope.coreRedstoneHorizontalState = true;
         $scope.ccAuthBoxHidden = false;
         $scope.ccAuthBoxIsOpen = false;
         $scope.ccAuthBoxHover = true;
-        $scope.coreEdhubToggleSideNav = coreEdhubToggleSideNav('core-sidenav');
+        $scope.coreRedstoneToggleSideNav = coreRedstoneToggleSideNav('core-sidenav');
         const enumAuthBox = {
             loginSignup: "Login/Signup",
             logout: "Logout",
@@ -32,7 +31,7 @@
             $scope.ccCurrentUser = userEmail;
         };
 
-        function coreEdhubToggleSideNav(componentId) {
+        function coreRedstoneToggleSideNav(componentId) {
             $rootScope.ccRed = '@rs.app';
             console.log("redstone cloud app - coreRedstoneToggleSideNav() wired up");
             return function () {
@@ -40,16 +39,15 @@
             }
         }
 
-        // On opening, add a delayed property which shows tooltips
-        // after the speed dial has opened
-        // so that they have the proper position; if closing,
-        // immediately hide the tooltips
+        // On opening, add a delayed property which shows tooltips after the speed dial has opened
+        // so that they have the proper position; if closing, immediately hide the tooltips
         $scope.$watch('ccAuthBoxIsOpen', function (isOpen) {
             if (isOpen) {
                 $timeout(function () {
                     $scope.tooltipVisible = $scope.ccAuthBoxIsOpen;
                 }, 400);
-            } else {
+            }
+            else {
                 $scope.tooltipVisible = $scope.ccAuthBoxIsOpen;
             }
         });
@@ -91,7 +89,6 @@
             }
         };
 
-        // as of 12:08pm-4/26/2018, the modal doesn't center correctly :(
         // TODO: eventually get this modal dialog to work because it's really REALLY cool!
         $scope.ccOpenDialog = function ($event, item) {
             // Show the dialog
@@ -115,37 +112,26 @@
             });
         };
 
-        $rootScope.$on("edhub-event-auth-user", function(e, args){
+        $rootScope.$on("redstone-event-auth-user", function (e, args) {
             $scope.ccItems[0].name = _determineAuthState();
         });
 
         function _determineAuthState() {
-            // var authUser = edhubAuthService.getAuthUser();
             let authUser = '';
             return authUser === '' ? enumAuthBox.loginSignup : enumAuthBox.logout;
         }
 
-        function _loginSignup() {
-            console.log("in _authAction() !! ^_^");
-            $location.path("/signup");
-        }
+        function _loginSignup() {$location.path("/");}
 
         function _logout() {
-            edhubAuthService.logout();
-            $location.path("/user-auth-logout/logout-page");
+            rsAuth.auth().$signOut();
+            $location.path("/");
         }
 
-        function _settings() {
-            console.log("in _settings() [=");
-        }
+        function _settings() {console.log("in _settings()");}
 
-        function _editProfile() {
-            console.log("in _editProfile() ! :)");
-            $location.url('/post');
-        }
+        function _editProfile() {$location.url('/post');}
 
-        function _orgApplicants() {
-            $location.path('/applications');
-        }
+        function _orgApplicants() {$location.path('/apps');}
     }
 }());

@@ -68,26 +68,21 @@ angular.module('rsCloudApp', [
                 controllerAs: 'cIdeaEngine',
                 resolve: {
                     authRsv: function ($location, rsAuth) {
-                        return rsAuth.auth().$requireSignIn()
-                                     .then(function (authUser) {
-                                         console.log(`authUser {authUser.email}:`);
-                                         console.log(authUser.email);
-                                         console.log(authUser);
+                        return rsAuth.auth().$requireSignIn().then(function (authUser) {
+                            console.log(`authUser ${authUser.email}:`);
 
-                                         if (authUser.email === 'idea-engine@rs.app') {
-                                             return {
-                                                 info: 'Hello ^_^/',
-                                                 email: authUser.email
-                                             };
-                                         }
-                                         else {
-                                             $location.url('/redstone')
-                                         }
-                                     })
-                                     // the user is unauthenticated
-                                     .catch(function (notAuthUser) {
-                                         $location.url('/');
-                                     });
+                            if (authUser.email === 'idea-engine@rs.app') {
+                                return {
+                                    info: 'Hello ^_^/',
+                                    email: authUser.email
+                                };
+                            }
+                            else {
+                                $location.url('/redstone')
+                            }
+                        }).catch(function (notAuthUser) {
+                            $location.url('/');
+                        });
                     }
                 }
             })

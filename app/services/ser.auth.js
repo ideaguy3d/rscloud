@@ -26,7 +26,7 @@
                 let authUserRef = orgRef.child(authUser.uid);
 
                 $rootScope.rsmAuthUser = $firebaseObject(authUserRef);
-                $rootScope.$broadcast("edhub-event-auth-user", {
+                $rootScope.$broadcast("redstone-event-auth-user", {
                     haveAuthUser: true
                 });
             }
