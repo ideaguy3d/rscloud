@@ -27,7 +27,8 @@
 
                 $rootScope.rsmAuthUser = $firebaseObject(authUserRef);
                 $rootScope.$broadcast("redstone-event-auth-user", {
-                    haveAuthUser: true
+                    haveAuthUser: true,
+                    email: authUser.email
                 });
             }
             else {

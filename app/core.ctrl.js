@@ -19,6 +19,7 @@
         $scope.ccAuthBoxIsOpen = false;
         $scope.ccAuthBoxHover = true;
         $scope.coreRedstoneToggleSideNav = coreRedstoneToggleSideNav('core-sidenav');
+
         const enumAuthBox = {
             loginSignup: "Login/Signup",
             logout: "Logout",
@@ -113,7 +114,7 @@
         };
 
         $rootScope.$on("redstone-event-auth-user", function (e, args) {
-            $scope.ccItems[0].name = _determineAuthState();
+            $rootScope.R_authUser = args;
         });
 
         function _determineAuthState() {
