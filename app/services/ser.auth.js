@@ -18,6 +18,7 @@
         const auth = $firebaseAuth();
         let authApi = {};
         let facebookProvider = new firebase.auth.FacebookAuthProvider();
+        let authAttempts = 0;
 
         auth.$onAuthStateChanged(function (authUser) {
             if (authUser) {
@@ -51,17 +52,15 @@
                                 $location.path('/' + info.path);
                             }
                             else {
-                                $location.path('/cart');
+                                $location.path('/redstone');
                             }
                         }
                         else {
-                            $location.path('/data');
+                            $location.path('/redstone');
                         }
                     })
                     .catch(function (error) {
-                        console.error("redstone - There was an error =");
-                        console.error(error.message);
-                        $rootScope.rootAuthError = error.message;
+                        $rootScope.R_authError = {info: error.message, count: ++authAttempts};
                     });
             },
             auth: function () {
