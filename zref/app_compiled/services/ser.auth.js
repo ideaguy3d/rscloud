@@ -16,10 +16,11 @@
 
     var authApi = {};
     var facebookProvider = new firebase.auth.FacebookAuthProvider();
+    var authAttempts = 0;
 
     _auth.$onAuthStateChanged(function (authUser) {
       if (authUser) {
-        console.log('USER IS authenticated - auth state changed');
+        //console.log('USER IS authenticated - auth state changed');
         var authUserRef = orgRef.child(authUser.uid);
         $rootScope.rsmAuthUser = $firebaseObject(authUserRef);
         $rootScope.$broadcast("redstone-event-auth-user", {
@@ -27,9 +28,14 @@
           email: authUser.email
         });
       } else {
-        console.log('USER NOT authenticated - auth state changed');
+        //console.log('USER NOT authenticated - auth state changed');
         $location.url('/');
         $rootScope.rsmAuthUser = "";
+        authAttempts = 0;
+        $rootScope.R_authStatus = {
+          info: '',
+          count: authAttempts
+        };
         $rootScope.$broadcast("redstone-event-auth-user", {
           haveAuthUser: false
         });
@@ -44,15 +50,16 @@
             if (authUser.email === 'idea-engine@rs.app') {
               $location.path('/' + info.path);
             } else {
-              $location.path('/cart');
+              $location.path('/redstone');
             }
           } else {
-            $location.path('/data');
+            $location.path('/redstone');
           }
         })["catch"](function (error) {
-          console.error("redstone - There was an error =");
-          console.error(error.message);
-          $rootScope.rootAuthError = error.message;
+          $rootScope.R_authStatus = {
+            info: error.message,
+            count: ++authAttempts
+          };
         });
       },
       auth: function auth() {

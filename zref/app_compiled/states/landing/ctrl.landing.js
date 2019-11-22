@@ -15,7 +15,6 @@
       email: '',
       pass: ''
     };
-    vm.error = '';
 
     $scope.s_login = function () {
       // make the app a bit more difficult to hack, maybe an attacker will

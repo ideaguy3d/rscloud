@@ -2,7 +2,7 @@
 11-19-2019:
 
 1) copy and paste code from "app" to "zref/app_uncompiled" (to maintain human readable code)
-2) npm run babel
+2) npm run compile
 3) grunt build
 4) firebase deploy 
 5) delete all the compiled code from the app folder

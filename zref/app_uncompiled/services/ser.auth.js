@@ -18,11 +18,11 @@
         const auth = $firebaseAuth();
         let authApi = {};
         let facebookProvider = new firebase.auth.FacebookAuthProvider();
+        let authAttempts = 0;
 
         auth.$onAuthStateChanged(function (authUser) {
             if (authUser) {
-                console.log('USER IS authenticated - auth state changed');
-
+                //console.log('USER IS authenticated - auth state changed');
                 let authUserRef = orgRef.child(authUser.uid);
 
                 $rootScope.rsmAuthUser = $firebaseObject(authUserRef);
@@ -32,9 +32,11 @@
                 });
             }
             else {
-                console.log('USER NOT authenticated - auth state changed');
+                //console.log('USER NOT authenticated - auth state changed');
                 $location.url('/');
                 $rootScope.rsmAuthUser = "";
+                authAttempts = 0;
+                $rootScope.R_authStatus = {info: '', count: authAttempts};
                 $rootScope.$broadcast("redstone-event-auth-user", {
                     haveAuthUser: false
                 });
@@ -51,17 +53,15 @@
                                 $location.path('/' + info.path);
                             }
                             else {
-                                $location.path('/cart');
+                                $location.path('/redstone');
                             }
                         }
                         else {
-                            $location.path('/data');
+                            $location.path('/redstone');
                         }
                     })
                     .catch(function (error) {
-                        console.error("redstone - There was an error =");
-                        console.error(error.message);
-                        $rootScope.rootAuthError = error.message;
+                        $rootScope.R_authStatus = {info: error.message, count: ++authAttempts};
                     });
             },
             auth: function () {
