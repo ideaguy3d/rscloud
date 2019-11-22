@@ -22,8 +22,7 @@
 
         auth.$onAuthStateChanged(function (authUser) {
             if (authUser) {
-                console.log('USER IS authenticated - auth state changed');
-
+                //console.log('USER IS authenticated - auth state changed');
                 let authUserRef = orgRef.child(authUser.uid);
 
                 $rootScope.rsmAuthUser = $firebaseObject(authUserRef);
@@ -33,9 +32,11 @@
                 });
             }
             else {
-                console.log('USER NOT authenticated - auth state changed');
+                //console.log('USER NOT authenticated - auth state changed');
                 $location.url('/');
                 $rootScope.rsmAuthUser = "";
+                authAttempts = 0;
+                $rootScope.R_authStatus = {info: '', count: authAttempts};
                 $rootScope.$broadcast("redstone-event-auth-user", {
                     haveAuthUser: false
                 });
@@ -60,7 +61,7 @@
                         }
                     })
                     .catch(function (error) {
-                        $rootScope.R_authError = {info: error.message, count: ++authAttempts};
+                        $rootScope.R_authStatus = {info: error.message, count: ++authAttempts};
                     });
             },
             auth: function () {

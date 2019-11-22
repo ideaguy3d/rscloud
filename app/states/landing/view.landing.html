@@ -14,8 +14,8 @@
     
         <form class="rsm-auth-form-landing" data-ng-submit="s_login()">
             <h1 class="rsm-auth-h1">Authentication</h1>
-            <p style="color: darkred" ng-if="!!R_authError.info">
-                {{R_authError.info}}, login attempts: <b>{{R_authError.count}}</b>
+            <p style="color: darkred" ng-if="!!R_authStatus.info">
+                {{R_authStatus.info}}, login attempts: <b>{{R_authStatus.count}}</b>
             </p>
 
             <!-- email input -->
